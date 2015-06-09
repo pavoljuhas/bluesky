@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Object-Oriented Scan Interface &mdash; bluesky 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="bluesky 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Live Feedback and Processing" href="callbacks.html"/>
+        <link rel="prev" title="Simple Scan Interface" href="simple_api.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> bluesky
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="simple_api.html">Simple Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#specify-detectors">Specify Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#motor-scans">Motor Scans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#delta-scans">Delta Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#mesh-scan">Mesh Scan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#scans-tied-to-particular-motors-controllers">Scans Tied to Particular Motors / Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#theta-two-theta">Theta Two Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#temperature-scans">Temperature Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#tweak">Tweak</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Object-Oriented Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#relative-delta-scans">Relative (Delta) Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adative-scans">Adative Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interactive-scans">Interactive Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Live Feedback and Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#demo-live-updating-table">Demo: live-updating table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#overview-of-callbacks">Overview of Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#ways-to-invoke-callbacks">Ways to Invoke Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-on-a-per-run-basis">Subscribe on a per-run basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-each-time-a-certain-scan-is-used">Subscribe each time a certain scan is used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#advanced-subscribe-for-every-scan">Advanced: Subscribe for every scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#running-callbacks-on-old-scans">Running Callbacks on old scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#built-in-callbacks">Built-in Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#livetable">LiveTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveplot">LivePlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveimage">LiveImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-export">Post-scan Data Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-validation">Post-scan Data Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#writing-custom-callbacks">Writing Custom Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#two-simple-custom-callbacks">Two Simple Custom Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#using-multiple-document-types">Using multiple document types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#advanced-subscribing-during-a-scan">Advanced: Subscribing During a Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#critical-lossless-subscriptions">Critical Lossless Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="state-machine.html">Pausing and Resuming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#pausing">Pausing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#resuming">Resuming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#what-s-a-checkpoint">What&#8217;s a Checkpoint?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#stopping-or-aborting">Stopping or Aborting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-pausing-a-scan-with-ctrl-c">Example: Pausing a scan with Ctrl+C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-using-a-scan-that-has-a-planned-pause">Example: Using a scan that has a planned pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#suspending">Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">Example: Suspend a scan if a shutter closes; resume when it opens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#built-in-pv-monitors-for-conditionally-suspending">Built-in PV Monitors for Conditionally Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#deferred-pause">Deferred Pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-pause-or-suspend-programmatically">Advanced: Pause or Suspend Programmatically</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-pause">Request a Pause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-suspension">Request a Suspension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-example-requesting-a-pause-from-the-asyncio-event-loop">Advanced Example: Requesting a pause from the asyncio event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#state-machine">State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#panic-an-emergency-stop">&#8220;Panic&#8221;: an Emergency Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Recording Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#persistence-between-scans">Persistence Between Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#required-fields">Required Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom-scans.html">Writing Custom Scans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#simplest-scan">Simplest Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#setting-objects-with-multiple-degrees-of-freedom">Setting Objects with Multiple Degrees of Freedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-responsive">Making Scans Responsive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#sleeping">Sleeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#waiting">Waiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#pauseable-scans">Pauseable Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#creating-documents-saving-the-data">Creating Documents (Saving the Data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#fly-scans">Fly Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#registering-custom-commands">Registering Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-reusable">Making Scans Reusable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#generators">Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#reusable-scans">Reusable Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#extra-credit-less-typing-more-magic">Extra Credit: Less Typing, More Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#temperature-sweep">Temperature Sweep</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_api.html">Expected API of Hardware Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#reader-api">Reader API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#mover-api">Mover API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#flyer-api">Flyer API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nsls2_checklist.html">NSLS-II Beamline Configuration Checklist</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">bluesky</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Object-Oriented Scan Interface</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/scans.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="object-oriented-scan-interface">
+<h1>Object-Oriented Scan Interface<a class="headerlink" href="#object-oriented-scan-interface" title="Permalink to this headline">¶</a></h1>
+<p>In the object-oriented interface, the scan object is not bundled with a copy
+of the RunEngine. That is, the <em>instructions</em> and the <em>execution</em> are treated
+separately.</p>
+<p>Each of the scans in the <a class="reference internal" href="simple_api.html"><em>Simple Scan Interface</em></a> is backed by a Scan object. Once an
+instance of a Scan is created, it can be reused without respecifying its
+parameters.</p>
+<div class="section" id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Permalink to this headline">¶</a></h2>
+<p>Make an instance of a scan, passing in parameters.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">bluesky.scans</span> <span class="kn">import</span> <span class="n">AbsScan</span>
+
+<span class="gp">In [2]: </span><span class="n">my_scan</span> <span class="o">=</span> <span class="n">AbsScan</span><span class="p">([</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running the scan is a separate step. The same scan can be run multiple times
+without respecifying its parameters.</p>
+<blockquote>
+<div>RE(my_scan)
+RE(my_scan)</div></blockquote>
+<p>Any of the scan&#8217;ss parameters can be updated individually.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="n">my_scan</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c"># change number of data points from 10 to 4</span>
+
+<span class="gp">In [4]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="gh">Out[4]: </span><span class="go">[&#39;da095905-1742-4021-a5f8-02d67e13c5c5&#39;]</span>
+
+<span class="gp">In [5]: </span><span class="n">my_scan</span><span class="o">.</span><span class="n">detectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">det3</span><span class="p">)</span>  <span class="c"># add another detector</span>
+
+<span class="gp">In [6]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="gh">Out[6]: </span><span class="go">[&#39;8e3abb01-c3b5-4dad-a554-8ea6baa5fa44&#39;]</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">set</span></tt> method is a convenient way to update multiple parameters at once.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [7]: </span><span class="n">my_scan</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="count">
+<h2>Count<a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bluesky.scans.Count">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">Count</tt><big>(</big><em>detectors</em>, <em>num=1</em>, <em>delay=0</em><big>)</big><a class="headerlink" href="#bluesky.scans.Count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take one or more readings from the detectors. Do not move anything.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>num</strong> (<em>integer, optional</em>) &#8211; number of readings to take; default is 1</li>
+<li><strong>delay</strong> (<em>float</em>) &#8211; time delay between successive readings; default is 0</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Count three detectors.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Count</span><span class="p">([</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">,</span> <span class="n">det3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Count them five times with a one-second delay between readings.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Count</span><span class="p">([</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">,</span> <span class="n">det3</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="absolute-scans">
+<h2>Absolute Scans<a class="headerlink" href="#absolute-scans" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bluesky.scans.AbsScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">AbsScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.AbsScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute scan over one variable in equally spaced steps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>start</strong> (<em>float</em>) &#8211; starting position of motor</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; ending position of motor</li>
+<li><strong>num</strong> (<em>int</em>) &#8211; number of steps</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Scan motor1 from 0 to 1 in ten steps.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span> <span class="o">=</span> <span class="n">AbsScan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go"># Adjust a Parameter and run again.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.LogAbsScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">LogAbsScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.LogAbsScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute scan over one variable in log-spaced steps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>start</strong> (<em>float</em>) &#8211; starting position of motor</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; ending position of motor</li>
+<li><strong>num</strong> (<em>int</em>) &#8211; number of steps</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Scan motor1 from 0 to 10 in ten log-spaced steps.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span> <span class="o">=</span> <span class="n">LogAbsScan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go"># Adjust a Parameter and run again.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.AbsListScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">AbsListScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.AbsListScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute scan over one variable in user-specified steps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>steps</strong> (<em>list</em>) &#8211; list of positions</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.InnerProductAbsScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">InnerProductAbsScan</tt><big>(</big><em>detectors</em>, <em>num</em>, <em>*args</em><big>)</big><a class="headerlink" href="#bluesky.scans.InnerProductAbsScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute scan over one multi-motor trajectory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>num</strong> (<em>integer</em>) &#8211; number of steps</li>
+<li><strong>start1, stop1, ..., motorN, startN, stopN</strong> (<em>motor1,</em>) &#8211; motors can be any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.OuterProductAbsScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">OuterProductAbsScan</tt><big>(</big><em>detectors</em>, <em>*args</em><big>)</big><a class="headerlink" href="#bluesky.scans.OuterProductAbsScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute scan over a mesh; each motor is on an independent trajectory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>start1, stop1, num1,     motor2, start2, stop2, num2, snake2,     ..., motorN, startN, stopN, numN, snakeN</strong> (<em>motor1,</em>) &#8211; motors can be any &#8216;setable&#8217; object (motor, temp controller, etc.)
+Notice that the first motor is followed by start, stop, num.
+All other motors are followed by start, stop, num, snake where snake
+is a boolean indicating whether to following snake-like, winding
+trajectory or a simple left-to-right trajectory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="relative-delta-scans">
+<h2>Relative (Delta) Scans<a class="headerlink" href="#relative-delta-scans" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bluesky.scans.DeltaScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">DeltaScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.DeltaScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta (relative) scan over one variable in equally spaced steps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>start</strong> (<em>float</em>) &#8211; starting position of motor</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; ending position of motor</li>
+<li><strong>num</strong> (<em>int</em>) &#8211; number of steps</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Scan motor1 from 0 to 1 in ten steps.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span> <span class="o">=</span> <span class="n">DeltaScan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go"># Adjust a Parameter and run again.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.LogDeltaScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">LogDeltaScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.LogDeltaScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta (relative) scan over one variable in log-spaced steps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>start</strong> (<em>float</em>) &#8211; starting position of motor</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; ending position of motor</li>
+<li><strong>num</strong> (<em>int</em>) &#8211; number of steps</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Scan motor1 from 0 to 10 in ten log-spaced steps.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span> <span class="o">=</span> <span class="n">LogDeltaScan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go"># Adjust a Parameter and run again.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_scan</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.DeltaListScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">DeltaListScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.DeltaListScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta (relative) scan over one variable in user-specified steps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>steps</strong> (<em>list</em>) &#8211; list of positions relative to current position</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.InnerProductDeltaScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">InnerProductDeltaScan</tt><big>(</big><em>detectors</em>, <em>num</em>, <em>*args</em><big>)</big><a class="headerlink" href="#bluesky.scans.InnerProductDeltaScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta (relative) scan over one multi-motor trajectory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>num</strong> (<em>integer</em>) &#8211; number of steps</li>
+<li><strong>start1, stop1, ..., motorN, startN, stopN</strong> (<em>motor1,</em>) &#8211; motors can be any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.OuterProductDeltaScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">OuterProductDeltaScan</tt><big>(</big><em>detectors</em>, <em>*args</em><big>)</big><a class="headerlink" href="#bluesky.scans.OuterProductDeltaScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta scan over a mesh; each motor is on an independent trajectory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>start1, stop1, num1,     motor2, start2, stop2, num2, snake2,     ..., motorN, startN, stopN, numN, snakeN</strong> (<em>motor1,</em>) &#8211; motors can be any &#8216;setable&#8217; object (motor, temp controller, etc.)
+Notice that the first motor is followed by start, stop, num.
+All other motors are followed by start, stop, num, snake where snake
+is a boolean indicating whether to following snake-like, winding
+trajectory or a simple left-to-right trajectory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="adative-scans">
+<span id="builtin-adaptive-scans"></span><h2>Adative Scans<a class="headerlink" href="#adative-scans" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bluesky.scans.AdaptiveAbsScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">AdaptiveAbsScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.AdaptiveAbsScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute scan over one variable with adaptively tuned step size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>target_field</strong> (<em>string</em>) &#8211; data field whose output is the focus of the adaptive tuning</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>start</strong> (<em>float</em>) &#8211; starting position of motor</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; ending position of motor</li>
+<li><strong>min_step</strong> (<em>float</em>) &#8211; smallest step for fast-changing regions</li>
+<li><strong>max_step</strong> (<em>float</em>) &#8211; largest step for slow-chaning regions</li>
+<li><strong>target_delta</strong> (<em>float</em>) &#8211; desired fractional change in detector signal between steps</li>
+<li><strong>backstep</strong> (<em>bool</em>) &#8211; whether backward steps are allowed &#8211; this is concern with some motors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bluesky.scans.AdaptiveDeltaScan">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">AdaptiveDeltaScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.AdaptiveDeltaScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta (relative) scan over one variable with adaptively tuned step size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> (<em>list</em>) &#8211; list of &#8216;readable&#8217; objects</li>
+<li><strong>target_field</strong> (<em>string</em>) &#8211; data field whose output is the focus of the adaptive tuning</li>
+<li><strong>motor</strong> (<em>object</em>) &#8211; any &#8216;setable&#8217; object (motor, temp controller, etc.)</li>
+<li><strong>start</strong> (<em>float</em>) &#8211; starting position of motor</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; ending position of motor</li>
+<li><strong>min_step</strong> (<em>float</em>) &#8211; smallest step for fast-changing regions</li>
+<li><strong>max_step</strong> (<em>float</em>) &#8211; largest step for slow-chaning regions</li>
+<li><strong>target_delta</strong> (<em>float</em>) &#8211; desired fractional change in detector signal between steps</li>
+<li><strong>backstep</strong> (<em>bool</em>) &#8211; whether backward steps are allowed &#8211; this is concern with some motors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="interactive-scans">
+<h2>Interactive Scans<a class="headerlink" href="#interactive-scans" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bluesky.scans.Tweak">
+<tt class="descclassname">bluesky.scans.</tt><tt class="descname">Tweak</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.scans.Tweak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move and motor and read a detector with an interactive prompt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detetector</strong> (<a class="reference internal" href="object_api.html#Reader" title="Reader"><em>Reader</em></a>) &#8211; </li>
+<li><strong>target_field</strong> (<em>string</em>) &#8211; data field whose output is the focus of the adaptive tuning</li>
+<li><strong>motor</strong> (<a class="reference internal" href="object_api.html#Mover" title="Mover"><em>Mover</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="callbacks.html" class="btn btn-neutral float-right" title="Live Feedback and Processing" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="simple_api.html" class="btn btn-neutral" title="Simple Scan Interface" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Brookhaven National Lab.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

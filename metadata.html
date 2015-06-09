@@ -1,0 +1,392 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Recording Metadata &mdash; bluesky 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="bluesky 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Writing Custom Scans" href="custom-scans.html"/>
+        <link rel="prev" title="Pausing and Resuming" href="state-machine.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> bluesky
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="simple_api.html">Simple Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#specify-detectors">Specify Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#motor-scans">Motor Scans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#delta-scans">Delta Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#mesh-scan">Mesh Scan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#scans-tied-to-particular-motors-controllers">Scans Tied to Particular Motors / Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#theta-two-theta">Theta Two Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#temperature-scans">Temperature Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#tweak">Tweak</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scans.html">Object-Oriented Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#relative-delta-scans">Relative (Delta) Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#adative-scans">Adative Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#interactive-scans">Interactive Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Live Feedback and Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#demo-live-updating-table">Demo: live-updating table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#overview-of-callbacks">Overview of Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#ways-to-invoke-callbacks">Ways to Invoke Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-on-a-per-run-basis">Subscribe on a per-run basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-each-time-a-certain-scan-is-used">Subscribe each time a certain scan is used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#advanced-subscribe-for-every-scan">Advanced: Subscribe for every scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#running-callbacks-on-old-scans">Running Callbacks on old scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#built-in-callbacks">Built-in Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#livetable">LiveTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveplot">LivePlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveimage">LiveImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-export">Post-scan Data Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-validation">Post-scan Data Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#writing-custom-callbacks">Writing Custom Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#two-simple-custom-callbacks">Two Simple Custom Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#using-multiple-document-types">Using multiple document types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#advanced-subscribing-during-a-scan">Advanced: Subscribing During a Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#critical-lossless-subscriptions">Critical Lossless Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="state-machine.html">Pausing and Resuming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#pausing">Pausing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#resuming">Resuming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#what-s-a-checkpoint">What&#8217;s a Checkpoint?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#stopping-or-aborting">Stopping or Aborting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-pausing-a-scan-with-ctrl-c">Example: Pausing a scan with Ctrl+C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-using-a-scan-that-has-a-planned-pause">Example: Using a scan that has a planned pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#suspending">Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">Example: Suspend a scan if a shutter closes; resume when it opens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#built-in-pv-monitors-for-conditionally-suspending">Built-in PV Monitors for Conditionally Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#deferred-pause">Deferred Pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-pause-or-suspend-programmatically">Advanced: Pause or Suspend Programmatically</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-pause">Request a Pause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-suspension">Request a Suspension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-example-requesting-a-pause-from-the-asyncio-event-loop">Advanced Example: Requesting a pause from the asyncio event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#state-machine">State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#panic-an-emergency-stop">&#8220;Panic&#8221;: an Emergency Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Recording Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#persistence-between-scans">Persistence Between Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#required-fields">Required Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom-scans.html">Writing Custom Scans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#simplest-scan">Simplest Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#setting-objects-with-multiple-degrees-of-freedom">Setting Objects with Multiple Degrees of Freedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-responsive">Making Scans Responsive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#sleeping">Sleeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#waiting">Waiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#pauseable-scans">Pauseable Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#creating-documents-saving-the-data">Creating Documents (Saving the Data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#fly-scans">Fly Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#registering-custom-commands">Registering Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-reusable">Making Scans Reusable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#generators">Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#reusable-scans">Reusable Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#extra-credit-less-typing-more-magic">Extra Credit: Less Typing, More Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#temperature-sweep">Temperature Sweep</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_api.html">Expected API of Hardware Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#reader-api">Reader API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#mover-api">Mover API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#flyer-api">Flyer API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nsls2_checklist.html">NSLS-II Beamline Configuration Checklist</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">bluesky</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Recording Metadata</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/metadata.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="recording-metadata">
+<h1>Recording Metadata<a class="headerlink" href="#recording-metadata" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Permalink to this headline">¶</a></h2>
+<p>Metadata is bundled with the data generated by a scan. It can be used by
+callbacks (e.g., to tell plots how to label their axes) or simply used to
+identify and analyze the data later.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">gs</span><span class="o">.</span><span class="n">RE</span><span class="o">.</span><span class="n">md</span><span class="p">[</span><span class="s">&#39;project&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;my xray project&#39;</span>
+
+<span class="gp">In [2]: </span><span class="n">gs</span><span class="o">.</span><span class="n">RE</span><span class="o">.</span><span class="n">md</span><span class="p">[</span><span class="s">&#39;sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;color&#39;</span><span class="p">:</span> <span class="s">&#39;red&#39;</span><span class="p">,</span> <span class="s">&#39;dimensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Or specified when the scan is run.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="n">ct</span><span class="p">(</span><span class="n">experimenter</span><span class="o">=</span><span class="s">&#39;Emily&#39;</span><span class="p">,</span> <span class="n">mood</span><span class="o">=</span><span class="s">&#39;excited&#39;</span><span class="p">)</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:35.171504  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[3]: </span><span class="go">[&#39;e814230d-d1c2-4145-9180-5fa5aee71800&#39;]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Structured data, such as</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;color&#39;</span><span class="p">:</span> <span class="s">&#39;red&#39;</span><span class="p">,</span> <span class="s">&#39;dimensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>is much better than a long string like</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;red_10_20_5&#39;</span>
+</pre></div>
+</div>
+<p class="last">because it is searchable and self-describing. To encourage good practices,
+the RunEngine inists that &#8216;sample&#8217; be a dictionary. Any other fields
+you invent can be anything you want.</p>
+</div>
+</div>
+<div class="section" id="persistence-between-scans">
+<h2>Persistence Between Scans<a class="headerlink" href="#persistence-between-scans" title="Permalink to this headline">¶</a></h2>
+<p>The following fields are automatically reused between runs unless overridden.</p>
+<ul class="simple">
+<li>sample</li>
+<li>project</li>
+<li>owner</li>
+<li>group</li>
+<li>beamline_id</li>
+<li>config (which should rarely change; see below)</li>
+<li>scan_id (which is automatically incremented)</li>
+</ul>
+<p>Custom fields, like &#8216;experimenter&#8217; and &#8216;mood&#8217; in the example above, are not
+reused by default, as we can see below.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [4]: </span><span class="n">ct</span><span class="p">()</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:35.369579  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[4]: </span><span class="go">[&#39;26b6d104-b936-4d83-8fcf-51b5c71477e1&#39;]</span>
+
+<span class="gp">In [5]: </span><span class="n">ct</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;color&#39;</span><span class="p">:</span> <span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="s">&#39;dimensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]})</span>
+<span class="go">                                                                                                                                                                                                                                +------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:35.550158  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[5]: </span><span class="go">[&#39;1acf3880-17ea-4ad3-95d2-6f9a15dd4ddd&#39;]</span>
+</pre></div>
+</div>
+<p>To add a custom field to the list of peristent fields, use
+<tt class="docutils literal"><span class="pre">RE.persistent_fields.append('experimenter')</span></tt>. Use
+<tt class="docutils literal"><span class="pre">RE.persistent_fields.remove('experimenter')</span></tt> to stop persisting it.
+Fields that are required by our Document specification&#8212;owner, group,
+beamline_id, and config&#8212;cannot be removed. (More on these below.)</p>
+<p>To review the metadata before running ascan, check <tt class="docutils literal"><span class="pre">gs.RE.md</span></tt>, which
+behaves like a Python dictionary.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [6]: </span><span class="n">gs</span><span class="o">.</span><span class="n">RE</span><span class="o">.</span><span class="n">md</span><span class="p">[</span><span class="s">&#39;sample&#39;</span><span class="p">]</span>
+<span class="gh">Out[6]: </span><span class="go">{&#39;color&#39;: &#39;blue&#39;, &#39;dimensions&#39;: [3, 1, 4]}</span>
+</pre></div>
+</div>
+<p>To start fresh:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [7]: </span><span class="n">gs</span><span class="o">.</span><span class="n">RE</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="required-fields">
+<h2>Required Fields<a class="headerlink" href="#required-fields" title="Permalink to this headline">¶</a></h2>
+<p>Some fields and required by our Document specification, and the RunEngine will
+raise a <tt class="docutils literal"><span class="pre">KeyError</span></tt> if they are not set. These fields are:</p>
+<ul class="simple">
+<li>owner</li>
+<li>group</li>
+<li>beamline_id (e.g., &#8216;csx&#8217;)</li>
+<li>config, a dictionary describing the hardware, calibration, dead pixels on
+detectors, etc.</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">standard_config.py</span></tt> fills some of these in automatically (e.g., &#8216;owner&#8217;
+defaults to the username of the UNIX user currently logged in).</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="custom-scans.html" class="btn btn-neutral float-right" title="Writing Custom Scans" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="state-machine.html" class="btn btn-neutral" title="Pausing and Resuming" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Brookhaven National Lab.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

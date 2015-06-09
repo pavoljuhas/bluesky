@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Simple Scan Interface &mdash; bluesky 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="bluesky 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Object-Oriented Scan Interface" href="scans.html"/>
+        <link rel="prev" title="Bluesky Data Collection Interface" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> bluesky
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Simple Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#specify-detectors">Specify Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#motor-scans">Motor Scans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delta-scans">Delta Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-scan">Mesh Scan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scans-tied-to-particular-motors-controllers">Scans Tied to Particular Motors / Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theta-two-theta">Theta Two Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#temperature-scans">Temperature Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tweak">Tweak</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scans.html">Object-Oriented Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#relative-delta-scans">Relative (Delta) Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#adative-scans">Adative Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#interactive-scans">Interactive Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Live Feedback and Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#demo-live-updating-table">Demo: live-updating table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#overview-of-callbacks">Overview of Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#ways-to-invoke-callbacks">Ways to Invoke Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-on-a-per-run-basis">Subscribe on a per-run basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-each-time-a-certain-scan-is-used">Subscribe each time a certain scan is used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#advanced-subscribe-for-every-scan">Advanced: Subscribe for every scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#running-callbacks-on-old-scans">Running Callbacks on old scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#built-in-callbacks">Built-in Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#livetable">LiveTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveplot">LivePlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveimage">LiveImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-export">Post-scan Data Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-validation">Post-scan Data Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#writing-custom-callbacks">Writing Custom Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#two-simple-custom-callbacks">Two Simple Custom Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#using-multiple-document-types">Using multiple document types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#advanced-subscribing-during-a-scan">Advanced: Subscribing During a Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#critical-lossless-subscriptions">Critical Lossless Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="state-machine.html">Pausing and Resuming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#pausing">Pausing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#resuming">Resuming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#what-s-a-checkpoint">What&#8217;s a Checkpoint?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#stopping-or-aborting">Stopping or Aborting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-pausing-a-scan-with-ctrl-c">Example: Pausing a scan with Ctrl+C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-using-a-scan-that-has-a-planned-pause">Example: Using a scan that has a planned pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#suspending">Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">Example: Suspend a scan if a shutter closes; resume when it opens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#built-in-pv-monitors-for-conditionally-suspending">Built-in PV Monitors for Conditionally Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#deferred-pause">Deferred Pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-pause-or-suspend-programmatically">Advanced: Pause or Suspend Programmatically</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-pause">Request a Pause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-suspension">Request a Suspension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-example-requesting-a-pause-from-the-asyncio-event-loop">Advanced Example: Requesting a pause from the asyncio event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#state-machine">State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#panic-an-emergency-stop">&#8220;Panic&#8221;: an Emergency Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Recording Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#persistence-between-scans">Persistence Between Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#required-fields">Required Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom-scans.html">Writing Custom Scans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#simplest-scan">Simplest Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#setting-objects-with-multiple-degrees-of-freedom">Setting Objects with Multiple Degrees of Freedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-responsive">Making Scans Responsive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#sleeping">Sleeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#waiting">Waiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#pauseable-scans">Pauseable Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#creating-documents-saving-the-data">Creating Documents (Saving the Data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#fly-scans">Fly Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#registering-custom-commands">Registering Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-reusable">Making Scans Reusable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#generators">Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#reusable-scans">Reusable Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#extra-credit-less-typing-more-magic">Extra Credit: Less Typing, More Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#temperature-sweep">Temperature Sweep</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_api.html">Expected API of Hardware Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#reader-api">Reader API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#mover-api">Mover API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#flyer-api">Flyer API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nsls2_checklist.html">NSLS-II Beamline Configuration Checklist</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">bluesky</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Simple Scan Interface</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/simple_api.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="simple-scan-interface">
+<h1>Simple Scan Interface<a class="headerlink" href="#simple-scan-interface" title="Permalink to this headline">¶</a></h1>
+<p>The simple scan interface provides a condensed syntax to execute common tasks.</p>
+<p>Some of the names and signatures of the functions in this module closely match
+some core &#8220;macros&#8221; in SPEC, control software used in X-ray diffraction
+experiments. Other functions introduce new functionality.</p>
+<p>The simple interface is not necessarily recommended for developing new scans.
+It is backed by a more explicit <a class="reference internal" href="scans.html"><em>Object-Oriented Scan Interface</em></a> suited for development work.</p>
+<div class="section" id="specify-detectors">
+<h2>Specify Detectors<a class="headerlink" href="#specify-detectors" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are using a IPython profile, a list of detectors might be
+automatically specified at startup. In that case, you may not need to do
+anything unless you need to inspect or customize that list.</p>
+</div>
+<p>The setting <tt class="docutils literal"><span class="pre">gs.DETS</span></tt> is a list of a detector objects. It controls
+which detectors are triggered and read by all the simple scans.
+(Incidentally, <tt class="docutils literal"><span class="pre">gs</span></tt> stands for &#8220;global state&#8221; or &#8220;global settings.&#8221; Why
+can&#8217;t it just be plain <tt class="docutils literal"><span class="pre">DETS</span></tt>? Global variables are best avoided in Python,
+and the <tt class="docutils literal"><span class="pre">gs.</span></tt> part provides useful input validation.)</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">gs</span><span class="o">.</span><span class="n">DETS</span> <span class="o">=</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Like any Python list, you can append and remove elements.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [2]: </span><span class="n">gs</span><span class="o">.</span><span class="n">DETS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">det3</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">gs</span><span class="o">.</span><span class="n">DETS</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">det1</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">gs</span><span class="o">.</span><span class="n">DETS</span>
+<span class="gh">Out[4]: </span><span class="go">[reader: det2, reader: det3]</span>
+</pre></div>
+</div>
+<p>There are other settings particular to certain kinds of scan.
+They are addressed below.</p>
+</div>
+<div class="section" id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Permalink to this headline">¶</a></h2>
+<p>Calling a scan generates a set of instructions and executes them. This
+&#8220;count&#8221; command acquires one reading from the detectors.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [5]: </span><span class="n">ct</span><span class="p">()</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:38.671894  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[5]: </span><span class="go">[&#39;e8c7f5e1-073d-4234-82b3-9bb9047b8c38&#39;]</span>
+</pre></div>
+</div>
+<p>In the standard, out-of-the-box configuration of bluesky, data is automatically saved and logged.</p>
+<p>Out of the box, it does not print or plot the data , but live tables and plots
+can be easily added. As with the detectors above, this may already be configured
+in your IPython profile. Here is one way to add a table to every <tt class="docutils literal"><span class="pre">ct</span></tt>
+scan. (More on <tt class="docutils literal"><span class="pre">ct</span></tt> below.)</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [6]: </span><span class="n">ct</span><span class="o">.</span><span class="n">subs</span> <span class="o">=</span> <span class="n">LiveTable</span><span class="p">(</span><span class="n">gs</span><span class="o">.</span><span class="n">DETS</span><span class="p">)</span>  <span class="c"># Print all the detectors&#39; readings.</span>
+
+<span class="gp">In [7]: </span><span class="n">ct</span><span class="p">()</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:38.887552  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[7]: </span><span class="go">[&#39;6abca076-3674-4adc-a2cc-fc7dbd0a7641&#39;]</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">subs</span></tt> attribute stands for &#8220;subscriptions&#8221;, about which you can read
+more in <a class="reference internal" href="callbacks.html"><em>Live Feedback and Processing</em></a>.</p>
+<p>The table will appear for all future scans; it only has to be set up once.
+Observe:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [8]: </span><span class="n">ct</span><span class="p">()</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:39.161117  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[8]: </span><span class="go">[&#39;c742d1c6-cad7-48b5-b7f1-146a2f6c1f9b&#39;]</span>
+</pre></div>
+</div>
+<p>If there are many detectors and the table is too wide, you can be more
+selective.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [9]: </span><span class="n">ct</span><span class="o">.</span><span class="n">subs</span> <span class="o">=</span> <span class="n">LiveTable</span><span class="p">([</span><span class="n">det2</span><span class="p">])</span>
+
+<span class="gp">In [10]: </span><span class="n">ct</span><span class="p">()</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|   seq_num  |             time  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="go">|         1  |  15:42:39.383699  |</span>
+<span class="go">+------------+-------------------+</span>
+<span class="gh">Out[10]: </span><span class="go">[&#39;68b37755-19ee-4f29-a48e-c512c8207fe0&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="count">
+<h2>Count<a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h2>
+<p>A <tt class="docutils literal"><span class="pre">ct</span></tt> (&#8220;count&#8221;) scan reads all the detectors in the list <tt class="docutils literal"><span class="pre">DETS</span></tt> for
+a given acquisition time. If no time is specified, 1 second is the default.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ct</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="motor-scans">
+<h2>Motor Scans<a class="headerlink" href="#motor-scans" title="Permalink to this headline">¶</a></h2>
+<p>Like <tt class="docutils literal"><span class="pre">ct</span></tt>, the motor scans read from all the detectors in the list
+<tt class="docutils literal"><span class="pre">DETS</span></tt>.</p>
+<div class="section" id="absolute-scans">
+<h3>Absolute Scans<a class="headerlink" href="#absolute-scans" title="Permalink to this headline">¶</a></h3>
+<p>An <tt class="docutils literal"><span class="pre">ascan</span></tt> (&#8220;absolute scan&#8221;) scans one motor in equal-sized steps.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ascan</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that <tt class="docutils literal"><span class="pre">intervals</span></tt> counts the number of <em>steps</em> which is one less
+than the number of <em>data points</em>. This follows the convention in SPEC.
+Outside of the simple API, we revert to the Python convention of counting
+data points, not steps.</p>
+<p>An <tt class="docutils literal"><span class="pre">a2scan</span></tt> scans two motors together along different trajectories,
+again in equal-sized steps. (We think of this as the &#8220;inner product&#8221; of two
+trajectories.)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a2scan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="n">start1</span><span class="p">,</span> <span class="n">finish1</span><span class="p">,</span> <span class="n">motor2</span><span class="p">,</span> <span class="n">start2</span><span class="p">,</span> <span class="n">finish2</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a3scan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="n">start1</span><span class="p">,</span> <span class="n">finish1</span><span class="p">,</span> <span class="n">motor2</span><span class="p">,</span> <span class="n">start2</span><span class="p">,</span> <span class="n">finish2</span><span class="p">,</span> <span class="n">motor3</span><span class="p">,</span>
+       <span class="n">start3</span><span class="p">,</span> <span class="n">finish3</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We provide <tt class="docutils literal"><span class="pre">a2scan</span></tt> and <tt class="docutils literal"><span class="pre">a3scan</span></tt> for convenience, but in fact both of them
+support any number of motors. This is valid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a2scan</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="n">start1</span><span class="p">,</span> <span class="n">finish1</span><span class="p">,</span> <span class="n">motor2</span><span class="p">,</span> <span class="n">start2</span><span class="p">,</span> <span class="n">finish2</span><span class="p">,</span> <span class="n">motor3</span><span class="p">,</span> <span class="n">start3</span><span class="p">,</span>
+       <span class="n">finish3</span><span class="p">,</span> <span class="n">motor4</span><span class="p">,</span> <span class="n">start4</span><span class="p">,</span> <span class="n">finish4</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delta-scans">
+<h3>Delta Scans<a class="headerlink" href="#delta-scans" title="Permalink to this headline">¶</a></h3>
+<p>A <tt class="docutils literal"><span class="pre">dscan</span></tt> (&#8220;delta scan&#8221;) scans one motor in equal-size steps, specified
+relative to the motor&#8217;s current position.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dscan</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">lup</span></tt> is an alias for <tt class="docutils literal"><span class="pre">dscan</span></tt>. And as with <tt class="docutils literal"><span class="pre">ascan</span></tt> above, there is a
+<tt class="docutils literal"><span class="pre">d2scan</span></tt> and a <tt class="docutils literal"><span class="pre">d3scan</span></tt>, each of which accept an unlimited number of
+motors.</p>
+</div>
+<div class="section" id="mesh-scan">
+<h3>Mesh Scan<a class="headerlink" href="#mesh-scan" title="Permalink to this headline">¶</a></h3>
+<p>A <tt class="docutils literal"><span class="pre">mesh</span></tt> scan scans any number of motors in a mesh. (We think of this as the
+&#8220;other product&#8221; of the trajectories.)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mesh</span><span class="p">(</span><span class="n">motor1</span><span class="p">,</span> <span class="n">start1</span><span class="p">,</span> <span class="n">finish1</span><span class="p">,</span> <span class="n">intervals1</span><span class="p">,</span> <span class="n">motor2</span><span class="p">,</span> <span class="n">start2</span><span class="p">,</span> <span class="n">finish2</span><span class="p">,</span>
+     <span class="n">intervals2</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As with <tt class="docutils literal"><span class="pre">a2scan</span></tt> and <tt class="docutils literal"><span class="pre">a3scan</span></tt>, <tt class="docutils literal"><span class="pre">mesh</span></tt> accepts any number of motors.
+Notice that the number of intervals is specified sepraately for each motor.</p>
+</div>
+</div>
+<div class="section" id="scans-tied-to-particular-motors-controllers">
+<h2>Scans Tied to Particular Motors / Controllers<a class="headerlink" href="#scans-tied-to-particular-motors-controllers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="theta-two-theta">
+<h3>Theta Two Theta<a class="headerlink" href="#theta-two-theta" title="Permalink to this headline">¶</a></h3>
+<p>This scan requires the settings <tt class="docutils literal"><span class="pre">gs.TH_MOTOR</span></tt> (&#8220;theta motor&#8221;) and
+<tt class="docutils literal"><span class="pre">gs.TTH_MOTOR</span></tt> (&#8220;two theta motor&#8221;).</p>
+<p>A <tt class="docutils literal"><span class="pre">th2th</span></tt> (&#8220;theta two theta&#8221;) scans steps the two theta motor through a
+given range while stepping the theta motor through half that range.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">th2th</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="temperature-scans">
+<h3>Temperature Scans<a class="headerlink" href="#temperature-scans" title="Permalink to this headline">¶</a></h3>
+<p>Temperature scans require the setting <tt class="docutils literal"><span class="pre">gs.TEMP_CONTROLLER</span></tt>.</p>
+<p>A <tt class="docutils literal"><span class="pre">tscan</span></tt> steps the temperature controller through equally-spaced temperature
+set points. An optional <tt class="docutils literal"><span class="pre">sleep</span></tt> argument specifies a thermalization time. As
+in SPEC, it is zero by default.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tscan</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">intervals</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">sleep</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There is also <tt class="docutils literal"><span class="pre">dtscan</span></tt>, a relative temperature scan.</p>
+</div>
+</div>
+<div class="section" id="tweak">
+<h2>Tweak<a class="headerlink" href="#tweak" title="Permalink to this headline">¶</a></h2>
+<p>Tweak is an interactive scan that reads a field from one detector, displays
+the result, and prompts the user to specify where to step the motor next.
+It requires the setting <tt class="docutils literal"><span class="pre">gs.MASTER_DET</span></tt> (which detector to use,
+such as <tt class="docutils literal"><span class="pre">sclr</span></tt>) and <tt class="docutils literal"><span class="pre">MASTER_DET_FIELD</span></tt> (the name of the field in that
+detector to read out, such as <tt class="docutils literal"><span class="pre">'sclr_chan4'</span></tt>). Note that the former is a
+readable object and the latter is a string of text.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tw</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scans.html" class="btn btn-neutral float-right" title="Object-Oriented Scan Interface" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Bluesky Data Collection Interface" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Brookhaven National Lab.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

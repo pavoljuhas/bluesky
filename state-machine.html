@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pausing and Resuming &mdash; bluesky 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="bluesky 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Recording Metadata" href="metadata.html"/>
+        <link rel="prev" title="Live Feedback and Processing" href="callbacks.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> bluesky
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="simple_api.html">Simple Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#specify-detectors">Specify Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#motor-scans">Motor Scans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#delta-scans">Delta Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#mesh-scan">Mesh Scan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#scans-tied-to-particular-motors-controllers">Scans Tied to Particular Motors / Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#theta-two-theta">Theta Two Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#temperature-scans">Temperature Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#tweak">Tweak</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scans.html">Object-Oriented Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#relative-delta-scans">Relative (Delta) Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#adative-scans">Adative Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#interactive-scans">Interactive Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Live Feedback and Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#demo-live-updating-table">Demo: live-updating table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#overview-of-callbacks">Overview of Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#ways-to-invoke-callbacks">Ways to Invoke Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-on-a-per-run-basis">Subscribe on a per-run basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-each-time-a-certain-scan-is-used">Subscribe each time a certain scan is used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#advanced-subscribe-for-every-scan">Advanced: Subscribe for every scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#running-callbacks-on-old-scans">Running Callbacks on old scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#built-in-callbacks">Built-in Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#livetable">LiveTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveplot">LivePlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveimage">LiveImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-export">Post-scan Data Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-validation">Post-scan Data Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#writing-custom-callbacks">Writing Custom Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#two-simple-custom-callbacks">Two Simple Custom Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#using-multiple-document-types">Using multiple document types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#advanced-subscribing-during-a-scan">Advanced: Subscribing During a Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#critical-lossless-subscriptions">Critical Lossless Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Pausing and Resuming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pausing">Pausing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resuming">Resuming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-s-a-checkpoint">What&#8217;s a Checkpoint?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#stopping-or-aborting">Stopping or Aborting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-pausing-a-scan-with-ctrl-c">Example: Pausing a scan with Ctrl+C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-using-a-scan-that-has-a-planned-pause">Example: Using a scan that has a planned pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#suspending">Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">Example: Suspend a scan if a shutter closes; resume when it opens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-pv-monitors-for-conditionally-suspending">Built-in PV Monitors for Conditionally Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deferred-pause">Deferred Pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-pause-or-suspend-programmatically">Advanced: Pause or Suspend Programmatically</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#request-a-pause">Request a Pause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#request-a-suspension">Request a Suspension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-example-requesting-a-pause-from-the-asyncio-event-loop">Advanced Example: Requesting a pause from the asyncio event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-machine">State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#panic-an-emergency-stop">&#8220;Panic&#8221;: an Emergency Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Recording Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#persistence-between-scans">Persistence Between Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#required-fields">Required Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom-scans.html">Writing Custom Scans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#simplest-scan">Simplest Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#setting-objects-with-multiple-degrees-of-freedom">Setting Objects with Multiple Degrees of Freedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-responsive">Making Scans Responsive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#sleeping">Sleeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#waiting">Waiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#pauseable-scans">Pauseable Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#creating-documents-saving-the-data">Creating Documents (Saving the Data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#fly-scans">Fly Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#registering-custom-commands">Registering Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-reusable">Making Scans Reusable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#generators">Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#reusable-scans">Reusable Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#extra-credit-less-typing-more-magic">Extra Credit: Less Typing, More Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#temperature-sweep">Temperature Sweep</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_api.html">Expected API of Hardware Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#reader-api">Reader API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#mover-api">Mover API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#flyer-api">Flyer API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nsls2_checklist.html">NSLS-II Beamline Configuration Checklist</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">bluesky</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Pausing and Resuming</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/state-machine.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="pausing-and-resuming">
+<h1>Pausing and Resuming<a class="headerlink" href="#pausing-and-resuming" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pausing">
+<h2>Pausing<a class="headerlink" href="#pausing" title="Permalink to this headline">¶</a></h2>
+<p>The RunEngine can be cleanly paused and resumed. Scans are resumed at specified
+checkpoints to ensure that the interruption does not corrupt the data or a miss
+a step.</p>
+<p>There are three ways to pause:</p>
+<ol class="arabic simple">
+<li>Pressing Ctrl+C</li>
+<li>Writing a scan with a planned pause step</li>
+<li>Advanced: Requesting a pause from a thread or event loop</li>
+</ol>
+<p>When the RunEngine is paused, it returns control to the user, who can then
+choose to resume, stop or abort. It is also possible to resume automatically:
+see <a class="reference internal" href="#suspending"><em>Suspending</em></a></p>
+</div>
+<div class="section" id="resuming">
+<h2>Resuming<a class="headerlink" href="#resuming" title="Permalink to this headline">¶</a></h2>
+<p>Use <tt class="docutils literal"><span class="pre">RE.resume()</span></tt> to resume a paused scan. It will &#8220;rewind&#8221; to the last
+checkpoint and continue from there. If a scan has no checkpoints or has not yet
+reached a checkpoint, the RunEngine has no safe place to resume. If told to
+pause, it will abort instead.</p>
+<div class="section" id="what-s-a-checkpoint">
+<h3>What&#8217;s a Checkpoint?<a class="headerlink" href="#what-s-a-checkpoint" title="Permalink to this headline">¶</a></h3>
+<p>Scans are specified as a sequence of messages, simple instructions
+like &#8216;read&#8217; and &#8216;set&#8217;. The instructions can optionally include one or more
+&#8216;checkpoint&#8217; message, indicating a place where it safe to resume after an
+interruption. For example, checkpoints are placed before each step of an
+<cite>AScan</cite>.</p>
+<p>If a scan does not include any &#8216;checkpoint&#8217; messages, then it cannot be
+resumed after an interruption. If a pause is requested, the scan is aborted
+instead.</p>
+</div>
+</div>
+<div class="section" id="stopping-or-aborting">
+<h2>Stopping or Aborting<a class="headerlink" href="#stopping-or-aborting" title="Permalink to this headline">¶</a></h2>
+<p>To stop a paused scan, use <tt class="docutils literal"><span class="pre">RE.stop()</span></tt> or <tt class="docutils literal"><span class="pre">RE.abort()</span></tt>. In both cases, any
+data that has been generated will be saved. The only difference is that
+aborted runs are marked with <tt class="docutils literal"><span class="pre">exit_status:</span> <span class="pre">'abort'</span></tt> instead of
+<tt class="docutils literal"><span class="pre">exit_status:</span> <span class="pre">'success'</span></tt>, which may be a useful distinction during analysis.</p>
+</div>
+<div class="section" id="example-pausing-a-scan-with-ctrl-c">
+<h2>Example: Pausing a scan with Ctrl+C<a class="headerlink" href="#example-pausing-a-scan-with-ctrl-c" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go">^C</span>
+<span class="go">Pausing...</span>
+<span class="gp">In [2]:</span>
+</pre></div>
+</div>
+<p>We have a command prompt back. We can resume like so:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [2]: </span><span class="n">RE</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+<span class="go">Resuming from last checkpoint...</span>
+<span class="gh">Out[2]: </span><span class="go">[&#39;bad06177-32af-47c8-a1b5-2c3e068ac30a&#39;]</span>
+</pre></div>
+</div>
+<p>As explained above, we could also have chosen to end the scan, using
+<tt class="docutils literal"><span class="pre">RE.stop()</span></tt> or <tt class="docutils literal"><span class="pre">RE.abort()</span></tt>.</p>
+</div>
+<div class="section" id="example-using-a-scan-that-has-a-planned-pause">
+<span id="planned-pause"></span><h2>Example: Using a scan that has a planned pause<a class="headerlink" href="#example-using-a-scan-that-has-a-planned-pause" title="Permalink to this headline">¶</a></h2>
+<p>As an example, we&#8217;ll use a step scan that pauses after each step, letting the
+user decide whether to continue. We&#8217;ll revisit this example in a later section
+to see the code of the scan itself. For now, we focus on how to use it.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="kn">from</span> <span class="nn">bluesky.examples</span> <span class="kn">import</span> <span class="n">cautious_stepscan</span><span class="p">,</span> <span class="n">motor1</span><span class="p">,</span> <span class="n">det1</span>
+
+<span class="gp">In [4]: </span><span class="n">RE</span><span class="p">(</span><span class="n">cautious_stepscan</span><span class="p">(</span><span class="n">det1</span><span class="p">,</span> <span class="n">motor1</span><span class="p">))</span>
+<span class="go">Value at -5 is 9.643749239819588e-22. Pausing.</span>
+<span class="go">Deferred pause acknowledged. Continuing to checkpoint.</span>
+<span class="gh">Out[4]: </span><span class="go">[&#39;29958a13-c4e6-44ef-8e0d-ddcc9037baa0&#39;]</span>
+
+<span class="gp">In [5]: </span><span class="n">RE</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+<span class="go">                                                                                                                                                       Value at -4 is 6.332082774547088e-14. Pausing.</span>
+<span class="go">Deferred pause acknowledged. Continuing to checkpoint.</span>
+<span class="gh">Out[5]: </span><span class="go">[&#39;29958a13-c4e6-44ef-8e0d-ddcc9037baa0&#39;]</span>
+
+<span class="gp">In [6]: </span><span class="n">RE</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+<span class="go">                                                                                                                                                                                                                                                                                                              Value at -3 is 7.614989872356314e-08. Pausing.</span>
+<span class="go">Deferred pause acknowledged. Continuing to checkpoint.</span>
+<span class="gh">Out[6]: </span><span class="go">[&#39;29958a13-c4e6-44ef-8e0d-ddcc9037baa0&#39;]</span>
+
+<span class="gp">In [7]: </span><span class="n">RE</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<span class="go">                                                                                                                                                                                                                                                                                                                                                                                                                                                                     Stopping...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="suspending">
+<span id="id1"></span><h2>Suspending<a class="headerlink" href="#suspending" title="Permalink to this headline">¶</a></h2>
+<p>A <em>suspended</em> scan does not return the prompt to the user. Like a paused scan,
+it stops executing new instructions and rewinds to the most recent checkpoint.
+But unlike a paused scan, it can resume execution automatically.</p>
+<p>To take manual control of a suspended scan, pause it using Ctrl+C. This will
+override its plan to automatically resume.</p>
+</div>
+<div class="section" id="example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">
+<h2>Example: Suspend a scan if a shutter closes; resume when it opens<a class="headerlink" href="#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens" title="Permalink to this headline">¶</a></h2>
+<p>We will use a built-in utility that watches an EPICS PV. It tells the
+RunEngine to suspend when the PV&#8217;s value goes high. When it goes low
+again, the RunEngine resumes.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [8]: </span><span class="n">pv_name</span> <span class="o">=</span> <span class="s">&#39;XF:23ID1-PPS{PSh}Pos-Sts&#39;</span>  <span class="c"># main shutter PV</span>
+
+<span class="gp">In [9]: </span><span class="kn">import</span> <span class="nn">bluesky.suspenders</span>
+
+<span class="gp">In [10]: </span><span class="n">my_s</span> <span class="o">=</span> <span class="n">bluesky</span><span class="o">.</span><span class="n">suspenders</span><span class="o">.</span><span class="n">PVSuspendBoolHigh</span><span class="p">(</span><span class="n">RE</span><span class="p">,</span> <span class="n">pv_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above is all that is required. It will watch the PV indefinitely.
+In the following example, the shuttle was closed in the middle of the
+second data point.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [11]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go">+------------+-------------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |         theta  |    sclr_chan4  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+</span>
+<span class="go">|         1  |  16:46:08.953815  |          0.03  |        290.00  |</span>
+<span class="go">Suspending....To get prompt hit Ctrl-C to pause the scan</span>
+<span class="go">|         2  |  16:46:20.868445  |          0.09  |        279.00  |</span>
+<span class="go">|         3  |  16:46:29.077690  |          0.16  |        284.00  |</span>
+<span class="go">|         4  |  16:46:33.540643  |          0.23  |        278.00  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+</span>
+</pre></div>
+</div>
+<p>Notice that the scan was suspended and then resumed.
+When it resumed, it went back to the last checkpoint and re-took
+the second data point cleanly. As with pausing, if a scan with no checkpoints
+is supended, the scan is immediately aborted because it cannot be cleanly
+resumed.</p>
+</div>
+<div class="section" id="built-in-pv-monitors-for-conditionally-suspending">
+<h2>Built-in PV Monitors for Conditionally Suspending<a class="headerlink" href="#built-in-pv-monitors-for-conditionally-suspending" title="Permalink to this headline">¶</a></h2>
+<p>The example above demonstrates <tt class="docutils literal"><span class="pre">PVSuspendBoolHigh</span></tt>. Several other variants
+are built in, and it is straightforward to write customized ones.</p>
+<dl class="class">
+<dt id="bluesky.suspenders.PVSuspendBoolHigh">
+<em class="property">class </em><tt class="descclassname">bluesky.suspenders.</tt><tt class="descname">PVSuspendBoolHigh</tt><big>(</big><em>RE</em>, <em>pv_name</em>, <em>*</em>, <em>sleep=0</em>, <em>loop=None</em><big>)</big><a class="headerlink" href="#bluesky.suspenders.PVSuspendBoolHigh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suspender which suspends the scan when a boolean PV
+goes high and resumes when the value goes low.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>RE</strong> (<em>RunEngine</em>) &#8211; The run engine instance this should work on</li>
+<li><strong>pv_name</strong> (<em>str</em>) &#8211; The PV to watch for changes to determine if the
+scan should be suspended</li>
+<li><strong>sleep</strong> (<em>float, optional</em>) &#8211; How long to wait in seconds after the resume condition is met
+before marking the event as done.  Defaults to 0</li>
+<li><strong>loop</strong> (<em>BaseEventLoop, optional</em>) &#8211; The event loop to work on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="bluesky.suspenders.PVSuspendBoolLow">
+<em class="property">class </em><tt class="descclassname">bluesky.suspenders.</tt><tt class="descname">PVSuspendBoolLow</tt><big>(</big><em>RE</em>, <em>pv_name</em>, <em>*</em>, <em>sleep=0</em>, <em>loop=None</em><big>)</big><a class="headerlink" href="#bluesky.suspenders.PVSuspendBoolLow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suspender which suspends the scan when a boolean PV
+goes low and resumes when the value goes high.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>RE</strong> (<em>RunEngine</em>) &#8211; The run engine instance this should work on</li>
+<li><strong>pv_name</strong> (<em>str</em>) &#8211; The PV to watch for changes to determine if the
+scan should be suspended</li>
+<li><strong>sleep</strong> (<em>float, optional</em>) &#8211; How long to wait in seconds after the resume condition is met
+before marking the event as done.  Defaults to 0</li>
+<li><strong>loop</strong> (<em>BaseEventLoop, optional</em>) &#8211; The event loop to work on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="bluesky.suspenders.PVSuspendFloor">
+<em class="property">class </em><tt class="descclassname">bluesky.suspenders.</tt><tt class="descname">PVSuspendFloor</tt><big>(</big><em>RE</em>, <em>pv</em>, <em>suspend_thresh</em>, <em>*</em>, <em>resume_thresh=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.suspenders.PVSuspendFloor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A suspender that watches a scalar PV and suspends when it
+falls below a given threshold.  Optionally, the threshold to
+resume can be set to be greater than the threshold to suspend.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>RE</strong> (<em>RunEngine</em>) &#8211; The run engine instance this should work on</li>
+<li><strong>pv_name</strong> (<em>str</em>) &#8211; The PV to watch for changes to determine if the
+scan should be suspended</li>
+<li><strong>suspend_thresh</strong> (<em>float</em>) &#8211; Suspend if the PV value falls below this value</li>
+<li><strong>resume_thresh</strong> (<em>float, optional</em>) &#8211; Resume when the PV value rises above this value.  If not
+given set to <cite>suspend_thresh</cite>.  Must be greater than <cite>suspend_thresh</cite>.</li>
+<li><strong>sleep</strong> (<em>float, optional</em>) &#8211; How long to wait in seconds after the resume condition is met
+before marking the event as done.  Defaults to 0</li>
+<li><strong>loop</strong> (<em>BaseEventLoop, optional</em>) &#8211; The event loop to work on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="bluesky.suspenders.PVSuspendCeil">
+<em class="property">class </em><tt class="descclassname">bluesky.suspenders.</tt><tt class="descname">PVSuspendCeil</tt><big>(</big><em>RE</em>, <em>pv</em>, <em>suspend_thresh</em>, <em>*</em>, <em>resume_thresh=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.suspenders.PVSuspendCeil" title="Permalink to this definition">¶</a></dt>
+<dd><p>A suspender that watches a scalar PV and suspends when it
+rises above a given threshold.  Optionally, the threshold to
+resume can be set to be less than the threshold to suspend.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>RE</strong> (<em>RunEngine</em>) &#8211; The run engine instance this should work on</li>
+<li><strong>pv_name</strong> (<em>str</em>) &#8211; The PV to watch for changes to determine if the
+scan should be suspended</li>
+<li><strong>suspend_thresh</strong> (<em>float</em>) &#8211; Suspend if the PV value rises above this value</li>
+<li><strong>resume_thresh</strong> (<em>float, optional</em>) &#8211; Resume when the PV value falls below this value.  If not
+given set to <cite>suspend_thresh</cite>.  Must be less than <cite>suspend_thresh</cite>.</li>
+<li><strong>sleep</strong> (<em>float, optional</em>) &#8211; How long to wait in seconds after the resume condition is met
+before marking the event as done.  Defaults to 0</li>
+<li><strong>loop</strong> (<em>BaseEventLoop, optional</em>) &#8211; The event loop to work on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="bluesky.suspenders.PVSuspendInBand">
+<em class="property">class </em><tt class="descclassname">bluesky.suspenders.</tt><tt class="descname">PVSuspendInBand</tt><big>(</big><em>RE</em>, <em>pv</em>, <em>band_bottom</em>, <em>band_top</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.suspenders.PVSuspendInBand" title="Permalink to this definition">¶</a></dt>
+<dd><p>A suspender class to keep a scalar PV with in a band.  Suspends if
+the value leaves the band, resume when it re-enters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>RE</strong> (<em>RunEngine</em>) &#8211; The run engine instance this should work on</li>
+<li><strong>pv_name</strong> (<em>str</em>) &#8211; The PV to watch for changes to determine if the
+scan should be suspended</li>
+<li><strong>band_top</strong> (<em>band_bottom,</em>) &#8211; The top and bottom of the band.  <cite>band_top</cite> must be
+strictly greater than <cite>band_bottom</cite>.</li>
+<li><strong>sleep</strong> (<em>float, optional</em>) &#8211; How long to wait in seconds after the resume condition is met
+before marking the event as done.  Defaults to 0</li>
+<li><strong>loop</strong> (<em>BaseEventLoop, optional</em>) &#8211; The event loop to work on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="bluesky.suspenders.PVSuspendOutBand">
+<em class="property">class </em><tt class="descclassname">bluesky.suspenders.</tt><tt class="descname">PVSuspendOutBand</tt><big>(</big><em>RE</em>, <em>pv</em>, <em>band_bottom</em>, <em>band_top</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.suspenders.PVSuspendOutBand" title="Permalink to this definition">¶</a></dt>
+<dd><p>A suspender class to keep a scalar PV out of a band.  Suspends if
+the value enters the band and resumes when it leaves.</p>
+<p>This is mostly here because it is the opposite of <cite>PVSuspenderInBand</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>RE</strong> (<em>RunEngine</em>) &#8211; The run engine instance this should work on</li>
+<li><strong>pv_name</strong> (<em>str</em>) &#8211; The PV to watch for changes to determine if the
+scan should be suspended</li>
+<li><strong>band_top</strong> (<em>band_bottom,</em>) &#8211; The top and bottom of the band.  <cite>band_top</cite> must be
+strictly greater than <cite>band_bottom</cite>.</li>
+<li><strong>sleep</strong> (<em>float, optional</em>) &#8211; How long to wait in seconds after the resume condition is met
+before marking the event as done.  Defaults to 0</li>
+<li><strong>loop</strong> (<em>BaseEventLoop, optional</em>) &#8211; The event loop to work on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="deferred-pause">
+<h2>Deferred Pause<a class="headerlink" href="#deferred-pause" title="Permalink to this headline">¶</a></h2>
+<p>When a <em>deferred pause</em> is requested, the RunEngine continues processing
+messages until the next checkpoint or the end of the scan, whichever happens
+first. When (if) it reaches a checkpoint, it pauses. Then it can be resumed
+from that checkpoint without repeating any work.</p>
+</div>
+<div class="section" id="advanced-pause-or-suspend-programmatically">
+<h2>Advanced: Pause or Suspend Programmatically<a class="headerlink" href="#advanced-pause-or-suspend-programmatically" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="request-a-pause">
+<h3>Request a Pause<a class="headerlink" href="#request-a-pause" title="Permalink to this headline">¶</a></h3>
+<p>This method is called when Ctrl+C is pressed or when a &#8216;pause&#8217; Message is
+processed. It can also be called by user-defined agents. See the next example.</p>
+<dl class="method">
+<dt id="bluesky.run_engine.RunEngine.request_pause">
+<tt class="descclassname">RunEngine.</tt><tt class="descname">request_pause</tt><big>(</big><em>defer=False</em>, <em>name=None</em>, <em>callback=None</em><big>)</big><a class="headerlink" href="#bluesky.run_engine.RunEngine.request_pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command the Run Engine to pause.</p>
+<p>This function is called by &#8216;pause&#8217; Messages. It can also be called
+by other threads. It cannot be called on the main thread during a run,
+but it is called by SIGINT (i.e., Ctrl+C).</p>
+<p>If there current run has no checkpoint commands, this will cause the
+run to abort.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>defer</strong> (<em>bool, optional</em>) &#8211; If False, pause immediately before processing any new messages.
+If True, pause at the next checkpoint.
+False by default.</li>
+<li><strong>name</strong> (<em>str, optional</em>) &#8211; Identify the source/reason for this pause. Required if there is a
+callback, below.</li>
+<li><strong>callback</strong> (<em>callable, optional</em>) &#8211; &#8220;Permission to resume.&#8221; Until this callable returns True, the Run
+Engine will not be allowed to resume. If None,</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="request-a-suspension">
+<h3>Request a Suspension<a class="headerlink" href="#request-a-suspension" title="Permalink to this headline">¶</a></h3>
+<p>This method is used by the <tt class="docutils literal"><span class="pre">PVSuspend*</span></tt> classes above. It can also be called
+by user-defined agents.</p>
+<dl class="method">
+<dt id="bluesky.run_engine.RunEngine.request_suspend">
+<tt class="descclassname">RunEngine.</tt><tt class="descname">request_suspend</tt><big>(</big><em>fut</em><big>)</big><a class="headerlink" href="#bluesky.run_engine.RunEngine.request_suspend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request that the run suspend itself until the future is finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fut</strong> (<em>asyncio.Future</em>) &#8211; </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="advanced-example-requesting-a-pause-from-the-asyncio-event-loop">
+<h2>Advanced Example: Requesting a pause from the asyncio event loop<a class="headerlink" href="#advanced-example-requesting-a-pause-from-the-asyncio-event-loop" title="Permalink to this headline">¶</a></h2>
+<p>Since the user does not control of the prompt, calls to <tt class="docutils literal"><span class="pre">RE.request_pause</span></tt>
+must be planned in advance. Here is a example that pauses the scan after 5
+seconds.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [12]: </span><span class="kn">from</span> <span class="nn">bluesky.examples</span> <span class="kn">import</span> <span class="n">do_nothing</span>
+
+<span class="gp">In [13]: </span><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="gp">In [14]: </span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+
+<span class="go"># Request a pause 5 seconds from now.</span>
+<span class="gp">In [15]: </span><span class="n">loop</span><span class="o">.</span><span class="n">call_later</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">RE</span><span class="o">.</span><span class="n">request_pause</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>  <span class="c"># or False to pause immediately</span>
+<span class="gh">Out[15]: </span><span class="go">&lt;TimerHandle when=1027056.6577239741 RunEngine.request_pause(True)&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [16]: </span><span class="n">RE</span><span class="p">(</span><span class="n">do_nothing</span><span class="p">())</span>
+<span class="go">Deferred pause acknowledged. Continuing to checkpoint.</span>
+<span class="gh">Out[16]: </span><span class="go">[&#39;603c6bb0-d630-429d-8b1b-a5b27fe441b4&#39;]</span>
+
+<span class="go"># Observe that the RunEngine is in a &#39;paused&#39; state.</span>
+<span class="gp">In [17]: </span><span class="n">RE</span><span class="o">.</span><span class="n">state</span>
+<span class="go">                                                                                                         Out[17]: &#39;paused&#39;</span>
+
+<span class="gp">In [18]: </span><span class="n">RE</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+<span class="go">                                                                                                                           Out[18]: [&#39;603c6bb0-d630-429d-8b1b-a5b27fe441b4&#39;]</span>
+</pre></div>
+</div>
+<p>Above, we passed <tt class="docutils literal"><span class="pre">True</span></tt> to <tt class="docutils literal"><span class="pre">RE.request_pause</span></tt> to request a deferred pause.</p>
+</div>
+<div class="section" id="state-machine">
+<h2>State Machine<a class="headerlink" href="#state-machine" title="Permalink to this headline">¶</a></h2>
+<p>The RunEngine has a state machine defining its phases of operation and the
+allowed transitions between them. As illustrated above, it can be inspected via
+the <tt class="docutils literal"><span class="pre">state</span></tt> property.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [19]: </span><span class="n">RE</span><span class="o">.</span><span class="n">state</span>
+<span class="gh">Out[19]: </span><span class="go">&#39;idle&#39;</span>
+</pre></div>
+</div>
+<p>The states are:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'idle'</span></tt>: RunEngine is waiting for instructions.</li>
+<li><tt class="docutils literal"><span class="pre">'running'</span></tt>: RunEngine is executing instructions.</li>
+<li><tt class="docutils literal"><span class="pre">'paused'</span></tt>: RunEngine is waiting for user input. It can be</li>
+</ul>
+</div>
+<div class="section" id="panic-an-emergency-stop">
+<h2>&#8220;Panic&#8221;: an Emergency Stop<a class="headerlink" href="#panic-an-emergency-stop" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Bluesky can immediately stop data collection in the event of a emergency
+stop, but it should not be relied on to protect hardware in the event
+of a dangerous condition. It may not have the necessary repsonse time or
+dependability.</p>
+</div>
+<p>A panic is similar to a pause. It is different in the following ways:</p>
+<ul class="simple">
+<li>A panic can happen from any state.</li>
+<li>It is requested by calling <tt class="docutils literal"><span class="pre">RE.panic()</span></tt>, a method which takes no
+arguments.</li>
+<li>Once the beamline is &#8220;panicked,&#8221; it is not possible to resume or run a new
+scan until <tt class="docutils literal"><span class="pre">RE.all_is_well()</span></tt> has been called.</li>
+<li>If a panic happens while RunEngine is in the &#8216;running&#8217; state, it always
+aborts the ongoing run without the option of resuming it.</li>
+<li>If a panic happens while the RunEngine is in the &#8216;paused&#8217; state, it is
+possible to resume after <tt class="docutils literal"><span class="pre">RE.all_is_well()</span></tt> has been called.</li>
+</ul>
+<dl class="method">
+<dt id="bluesky.run_engine.RunEngine.panic">
+<tt class="descclassname">RunEngine.</tt><tt class="descname">panic</tt><big>(</big><big>)</big><a class="headerlink" href="#bluesky.run_engine.RunEngine.panic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not permit the RunEngine to run until all_is_well() is called.</p>
+<p>If the RunEngine is currently running, it will abort before processing
+any more Messages and enter the &#8216;idle&#8217; state.</p>
+<p>If the RunEngine is currently paused, it will stay in the &#8216;paused&#8217;
+state, and it will disallow resume() until all_is_well() is called.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metadata.html" class="btn btn-neutral float-right" title="Recording Metadata" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="callbacks.html" class="btn btn-neutral" title="Live Feedback and Processing" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Brookhaven National Lab.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

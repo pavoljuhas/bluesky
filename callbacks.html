@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Live Feedback and Processing &mdash; bluesky 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="bluesky 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Pausing and Resuming" href="state-machine.html"/>
+        <link rel="prev" title="Object-Oriented Scan Interface" href="scans.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> bluesky
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="simple_api.html">Simple Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#specify-detectors">Specify Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#motor-scans">Motor Scans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#delta-scans">Delta Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#mesh-scan">Mesh Scan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#scans-tied-to-particular-motors-controllers">Scans Tied to Particular Motors / Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#theta-two-theta">Theta Two Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#temperature-scans">Temperature Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#tweak">Tweak</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scans.html">Object-Oriented Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#relative-delta-scans">Relative (Delta) Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#adative-scans">Adative Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#interactive-scans">Interactive Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Live Feedback and Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#demo-live-updating-table">Demo: live-updating table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-callbacks">Overview of Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ways-to-invoke-callbacks">Ways to Invoke Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subscribe-on-a-per-run-basis">Subscribe on a per-run basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subscribe-each-time-a-certain-scan-is-used">Subscribe each time a certain scan is used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-subscribe-for-every-scan">Advanced: Subscribe for every scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-callbacks-on-old-scans">Running Callbacks on old scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-callbacks">Built-in Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#livetable">LiveTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#liveplot">LivePlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#liveimage">LiveImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-scan-data-export">Post-scan Data Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-scan-data-validation">Post-scan Data Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-custom-callbacks">Writing Custom Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#two-simple-custom-callbacks">Two Simple Custom Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-multiple-document-types">Using multiple document types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-subscribing-during-a-scan">Advanced: Subscribing During a Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#critical-lossless-subscriptions">Critical Lossless Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="state-machine.html">Pausing and Resuming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#pausing">Pausing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#resuming">Resuming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#what-s-a-checkpoint">What&#8217;s a Checkpoint?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#stopping-or-aborting">Stopping or Aborting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-pausing-a-scan-with-ctrl-c">Example: Pausing a scan with Ctrl+C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-using-a-scan-that-has-a-planned-pause">Example: Using a scan that has a planned pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#suspending">Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">Example: Suspend a scan if a shutter closes; resume when it opens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#built-in-pv-monitors-for-conditionally-suspending">Built-in PV Monitors for Conditionally Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#deferred-pause">Deferred Pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-pause-or-suspend-programmatically">Advanced: Pause or Suspend Programmatically</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-pause">Request a Pause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-suspension">Request a Suspension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-example-requesting-a-pause-from-the-asyncio-event-loop">Advanced Example: Requesting a pause from the asyncio event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#state-machine">State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#panic-an-emergency-stop">&#8220;Panic&#8221;: an Emergency Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Recording Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#persistence-between-scans">Persistence Between Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#required-fields">Required Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom-scans.html">Writing Custom Scans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#simplest-scan">Simplest Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#setting-objects-with-multiple-degrees-of-freedom">Setting Objects with Multiple Degrees of Freedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-responsive">Making Scans Responsive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#sleeping">Sleeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#waiting">Waiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#pauseable-scans">Pauseable Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#creating-documents-saving-the-data">Creating Documents (Saving the Data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#fly-scans">Fly Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#registering-custom-commands">Registering Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-reusable">Making Scans Reusable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#generators">Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#reusable-scans">Reusable Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#extra-credit-less-typing-more-magic">Extra Credit: Less Typing, More Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#temperature-sweep">Temperature Sweep</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_api.html">Expected API of Hardware Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#reader-api">Reader API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#mover-api">Mover API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_api.html#flyer-api">Flyer API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nsls2_checklist.html">NSLS-II Beamline Configuration Checklist</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">bluesky</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Live Feedback and Processing</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/callbacks.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="live-feedback-and-processing">
+<h1>Live Feedback and Processing<a class="headerlink" href="#live-feedback-and-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="demo-live-updating-table">
+<h2>Demo: live-updating table<a class="headerlink" href="#demo-live-updating-table" title="Permalink to this headline">¶</a></h2>
+<p>We begin with the simplest useful example of live feedback, a table.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |          det1  |          det2  |          det3  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|         1  |  15:42:20.313724  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         2  |  15:42:20.547113  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         3  |  15:42:20.775742  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         4  |  15:42:21.001137  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="gh">Out[1]: </span><span class="go">[&#39;850366ae-a7ef-429d-9704-45dd22e2c07d&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="overview-of-callbacks">
+<h2>Overview of Callbacks<a class="headerlink" href="#overview-of-callbacks" title="Permalink to this headline">¶</a></h2>
+<p>As the RunEngine processes instructions, it creates <em>Documents,</em> plain Python
+dictionaries organized in a
+<a class="reference external" href="http://nsls-ii.github.io/arch/metadatastore-format.html">specified but flexible</a>
+way. These Documents contain
+the data and metadata generated by the scan. Each time a new Document is
+created, the RunEngine passes it to a list of functions. These functions can
+do anyting: store the data to disk, transfer the data to a cluster,
+update a plot, print a message, etc. The functions are called &#8220;callbacks.&#8221;</p>
+<p>We subscribe callbacks to the live stream of Documents. You can think of a
+subscription as a self-addressed stamped envelope. They tell the RunEngine,
+&#8220;When you create a Document, send it to this callback for processing.&#8221;</p>
+</div>
+<div class="section" id="ways-to-invoke-callbacks">
+<h2>Ways to Invoke Callbacks<a class="headerlink" href="#ways-to-invoke-callbacks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="subscribe-on-a-per-run-basis">
+<h3>Subscribe on a per-run basis<a class="headerlink" href="#subscribe-on-a-per-run-basis" title="Permalink to this headline">¶</a></h3>
+<p>To set up callbacks for a single use on a particular run, pass a second
+argument to the call to the RunEngine.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [2]: </span><span class="n">dets</span> <span class="o">=</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">,</span> <span class="n">det3</span><span class="p">]</span>
+
+<span class="gp">In [3]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">,</span> <span class="n">LiveTable</span><span class="p">(</span><span class="n">dets</span><span class="p">))</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |          det1  |          det2  |          det3  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|         1  |  15:42:21.290062  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         2  |  15:42:21.516741  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         3  |  15:42:21.749418  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         4  |  15:42:21.965600  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="gh">Out[3]: </span><span class="go">[&#39;3dbfd85c-6a71-4916-b029-51bf6f16afdb&#39;]</span>
+</pre></div>
+</div>
+<p>To use multiple callbacks, simply pass a list of them.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [4]: </span><span class="n">dets</span> <span class="o">=</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">,</span> <span class="n">det3</span><span class="p">]</span>
+
+<span class="gp">In [5]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">,</span> <span class="p">[</span><span class="n">LiveTable</span><span class="p">(</span><span class="n">dets</span><span class="p">),</span> <span class="n">LivePlot</span><span class="p">(</span><span class="n">det1</span><span class="p">)])</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |          det1  |          det2  |          det3  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|         1  |  15:42:22.447942  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         2  |  15:42:22.748452  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         3  |  15:42:23.043479  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         4  |  15:42:23.350568  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="gh">Out[5]: </span><span class="go">[&#39;2224ca32-82bf-427f-91b9-cb2c91eee8d5&#39;]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>Advanced:</strong> Note that this more explicit syntax is equivalent.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [6]: </span><span class="n">dets</span> <span class="o">=</span> <span class="p">[</span><span class="n">det1</span><span class="p">,</span> <span class="n">det2</span><span class="p">,</span> <span class="n">det3</span><span class="p">]</span>
+
+<span class="gp">In [7]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">,</span> <span class="n">subs</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;all&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">LiveTable</span><span class="p">(</span><span class="n">dets</span><span class="p">),</span> <span class="n">LivePlot</span><span class="p">(</span><span class="n">det1</span><span class="p">)]})</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |          det1  |          det2  |          det3  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|         1  |  15:42:23.832950  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         2  |  15:42:24.221251  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         3  |  15:42:24.574310  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         4  |  15:42:24.925270  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="gh">Out[7]: </span><span class="go">[&#39;ca797cbf-7631-427b-a40f-502c431ee8e9&#39;]</span>
+</pre></div>
+</div>
+<p class="last">The allowed keys are &#8216;all&#8217;, &#8216;start&#8217;, &#8216;stop&#8217;, &#8216;descriptor&#8217;, and &#8216;event&#8217;,
+corresponding to the names of the Documents.</p>
+</div>
+</div>
+<div class="section" id="subscribe-each-time-a-certain-scan-is-used">
+<h3>Subscribe each time a certain scan is used<a class="headerlink" href="#subscribe-each-time-a-certain-scan-is-used" title="Permalink to this headline">¶</a></h3>
+<p>Often, the same subscriptions are useful each time a certain kind of scan is
+run. To associate particular callbacks with a given scan, give the scan
+a <tt class="docutils literal"><span class="pre">subs</span></tt> attribute.</p>
+<p>This simplest way is to simply &#8220;monkey-patch&#8221; the scan instance like so:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [8]: </span><span class="n">my_scan</span><span class="o">.</span><span class="n">subs</span> <span class="o">=</span> <span class="n">LiveTable</span><span class="p">(</span><span class="n">dets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As above, this can one callback, a list of callbacks, or a dictionary. They
+will be used automatically each time the scan is run.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [9]: </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">)</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |          det1  |          det2  |          det3  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|         1  |  15:42:25.401531  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         2  |  15:42:25.720618  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         3  |  15:42:26.049207  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">|         4  |  15:42:26.368729  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="gh">Out[9]: </span><span class="go">[&#39;8e4c31be-aa79-45c6-9c9c-02fd7abfe26e&#39;]</span>
+</pre></div>
+</div>
+<p>More complex subscriptions can configured using a property, which can inspect
+the internal state &#8212; for example, using the range of motor positions to
+set plot limits in advance.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [10]: </span><span class="k">class</span> <span class="nc">PlottingAbsScan</span><span class="p">(</span><span class="n">AbsScan</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">def</span> <span class="nf">subs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">   ....: </span>        <span class="n">lp</span> <span class="o">=</span> <span class="n">LivePlot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detectors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">,</span>
+<span class="gp">   ....: </span>                      <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">))</span>
+<span class="gp">   ....: </span>        <span class="k">return</span> <span class="n">lp</span>
+<span class="gp">   ....: </span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced-subscribe-for-every-scan">
+<h3>Advanced: Subscribe for every scan<a class="headerlink" href="#advanced-subscribe-for-every-scan" title="Permalink to this headline">¶</a></h3>
+<p>The RunEngine itself can store a collection of subscriptions to be applied to
+every single scan it executes.</p>
+<p>Usually, if a subscription is useful for every single run, it should be added
+to a IPython configuration file and subscribed automatically at startup. This
+involves a more explicit API that exposes some of the details of how
+subscriptions work.</p>
+<p>The method <tt class="docutils literal"><span class="pre">RE.subscribe</span></tt> passes through to this method:</p>
+<dl class="method">
+<dt id="bluesky.run_engine.Dispatcher.subscribe">
+<tt class="descclassname">Dispatcher.</tt><tt class="descname">subscribe</tt><big>(</big><em>name</em>, <em>func</em><big>)</big><a class="headerlink" href="#bluesky.run_engine.Dispatcher.subscribe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a function to consume documents.</p>
+<p>The Run Engine can execute callback functions at the start and end
+of a scan, and after the insertion of new Event Descriptors
+and Events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>{&#8216;start&#8217;, &#8216;descriptor&#8217;, &#8216;event&#8217;, &#8216;stop&#8217;, &#8216;all&#8217;}</em>) &#8211; </li>
+<li><strong>func</strong> (<em>callable</em>) &#8211; expecting signature like <tt class="docutils literal"><span class="pre">f(mongoengine.Document)</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>token</strong> &#8211;
+an integer token that can be used to unsubscribe</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><em>Critical subscriptions</em> are also applied to every scan. See below for more on
+this topic.</p>
+</div>
+<div class="section" id="running-callbacks-on-old-scans">
+<h3>Running Callbacks on old scans<a class="headerlink" href="#running-callbacks-on-old-scans" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This subsection documents a feature that has not been released yet.</p>
+</div>
+<p>If the data is being saved to metadatastore (as it is if you use the standard
+configuration) then you can feed data from the Data Broker in the callbacks.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [11]: </span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">dataportal</span> <span class="kn">import</span> <span class="n">DataBroker</span><span class="p">,</span> <span class="n">stream</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="built-in-callbacks">
+<h2>Built-in Callbacks<a class="headerlink" href="#built-in-callbacks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="livetable">
+<h3>LiveTable<a class="headerlink" href="#livetable" title="Permalink to this headline">¶</a></h3>
+<p>As each data point is collected (i.e., as each Event Document is generated) a
+row is added to the table. For nonscalar detectors, such as area detectors,
+the sum is shown. (See LiveImage, below, to view the images themselves.)</p>
+<p>The only crucial parameter is the first one, which specifies which fields to
+include in the table. These can include specific fields (e.g., <tt class="docutils literal"><span class="pre">sclr_chan4</span></tt>)
+or readable objects (e.g., <tt class="docutils literal"><span class="pre">sclr</span></tt>). The other parameters adjust the display
+format.</p>
+<dl class="class">
+<dt id="bluesky.callbacks.LiveTable">
+<em class="property">class </em><tt class="descclassname">bluesky.callbacks.</tt><tt class="descname">LiveTable</tt><big>(</big><em>fields=None</em>, <em>rowwise=True</em>, <em>print_header_interval=50</em>, <em>max_post_decimal=2</em>, <em>max_pre_decimal=5</em>, <em>data_field_width=12</em>, <em>logbook=None</em><big>)</big><a class="headerlink" href="#bluesky.callbacks.LiveTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a function that prints data from each Event as a row in a table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fields</strong> (<em>list, optional</em>) &#8211; names of data fields to include in addition to &#8216;seq_num&#8217;</li>
+<li><strong>rowwise</strong> (<em>bool</em>) &#8211; If True, append each row to stdout. If False, reprint the full updated
+table each time. This is useful if other messsages are interspersed.</li>
+<li><strong>print_header_interval</strong> (<em>int</em>) &#8211; The number of events to process and print their rows before printing
+the header again</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Show a table with motor and detector readings..</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">stepscan</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">det</span><span class="p">),</span> <span class="n">LiveTable</span><span class="p">([</span><span class="s">&#39;motor&#39;</span><span class="p">,</span> <span class="s">&#39;det&#39;</span><span class="p">]))</span>
+<span class="go">+------------+-------------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |         motor  |   sum(det_2d)  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+</span>
+<span class="go">|         1  |  12:46:47.503068  |         -5.00  |        449.77  |</span>
+<span class="go">|         3  |  12:46:47.682788  |         -3.00  |        460.60  |</span>
+<span class="go">|         4  |  12:46:47.792307  |         -2.00  |        584.77  |</span>
+<span class="go">|         5  |  12:46:47.915401  |         -1.00  |       1056.37  |</span>
+<span class="go">|         7  |  12:46:48.120626  |          1.00  |       1056.50  |</span>
+<span class="go">|         8  |  12:46:48.193028  |          2.00  |        583.33  |</span>
+<span class="go">|         9  |  12:46:48.318454  |          3.00  |        460.99  |</span>
+<span class="go">|        10  |  12:46:48.419579  |          4.00  |        451.53  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="liveplot">
+<h3>LivePlot<a class="headerlink" href="#liveplot" title="Permalink to this headline">¶</a></h3>
+<p>Plot scalars.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to keep up with the scan, subscriptions skip over some Documents
+when they fall behind. Be aware that plots may not show all points. (Don&#8217;t
+worry: <em>all</em> the data is still being saved.)</p>
+</div>
+<dl class="class">
+<dt id="bluesky.callbacks.LivePlot">
+<em class="property">class </em><tt class="descclassname">bluesky.callbacks.</tt><tt class="descname">LivePlot</tt><big>(</big><em>y</em>, <em>x=None</em>, <em>legend_keys=None</em>, <em>xlim=None</em>, <em>ylim=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#bluesky.callbacks.LivePlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a function that updates a plot from a stream of Events.</p>
+<p>Note: If your figure blocks the main thread when you are trying to
+scan with this callback, call <cite>plt.ion()</cite> in your IPython session.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>y</strong> (<em>str</em>) &#8211; the name of a data field in an Event</li>
+<li><strong>x</strong> (<em>str, optional</em>) &#8211; the name of a data field in an Event
+If None, use the Event&#8217;s sequence number.</li>
+<li><strong>legend_keys</strong> (<em>list, optional</em>) &#8211; The list of keys to extract from the RunStart document and format
+in the legend of the plot. The legend will always show the
+scan_id followed by a colon (&#8220;1: &#8221;).  Each</li>
+<li><strong>xlim</strong> (<em>tuple</em>) &#8211; passed to Axes.set_xlim</li>
+<li><strong>ylim</strong> (<em>tuple</em>) &#8211; passed to Axes.set_ylim</li>
+<li><strong>additional keyword arguments are passed through to Axes.plot.</strong> (<em>All</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>func</strong> &#8211;
+expects one argument, an Event dictionary</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">function</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_plotter</span> <span class="o">=</span> <span class="n">LivePlot</span><span class="p">(</span><span class="s">&#39;det&#39;</span><span class="p">,</span> <span class="s">&#39;motor&#39;</span><span class="p">,</span> <span class="n">legend_keys</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sample&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RE</span><span class="p">(</span><span class="n">my_scan</span><span class="p">,</span> <span class="n">my_plotter</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="liveimage">
+<h3>LiveImage<a class="headerlink" href="#liveimage" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to keep up with the scan, subscriptions skip over some Documents
+when they fall behind. Be aware that plots may not show all points. (Don&#8217;t
+worry: <em>all</em> the data is still being saved.)</p>
+</div>
+<dl class="class">
+<dt id="bluesky.broker_callbacks.LiveImage">
+<em class="property">class </em><tt class="descclassname">bluesky.broker_callbacks.</tt><tt class="descname">LiveImage</tt><big>(</big><em>field</em><big>)</big><a class="headerlink" href="#bluesky.broker_callbacks.LiveImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stream 2D images in a cross-section viewer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<em>string</em>) &#8211; name of data field in an Event</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Requires a matplotlib fix that is not released as of this writing. The
+relevant commit is a951b7.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="post-scan-data-export">
+<h3>Post-scan Data Export<a class="headerlink" href="#post-scan-data-export" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This isn&#8217;t tested or documented yet, but it&#8217;s possible.</p>
+</div>
+</div>
+<div class="section" id="post-scan-data-validation">
+<h3>Post-scan Data Validation<a class="headerlink" href="#post-scan-data-validation" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This isn&#8217;t tested or documented yet, but it&#8217;s possible.</p>
+</div>
+</div>
+</div>
+<div class="section" id="writing-custom-callbacks">
+<h2>Writing Custom Callbacks<a class="headerlink" href="#writing-custom-callbacks" title="Permalink to this headline">¶</a></h2>
+<p>Any function that accepts a Python dictionary as its argument can be used as
+a callback. Refer to simple examples above to get started.</p>
+<div class="section" id="two-simple-custom-callbacks">
+<h3>Two Simple Custom Callbacks<a class="headerlink" href="#two-simple-custom-callbacks" title="Permalink to this headline">¶</a></h3>
+<p>These simple examples illustrate the concept and the usage.</p>
+<p>First, we define a function that takes a Python dictionary as its argument.
+This is the <em>callback</em>.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [12]: </span><span class="k">def</span> <span class="nf">print_data</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Measured: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">doc</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">])</span>
+<span class="gp">   ....: </span>
+</pre></div>
+</div>
+<p>Then, we tell the RunEngine to call this function on each Event Document.
+We are setting up a <em>subscription</em>.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [13]: </span><span class="n">s</span> <span class="o">=</span> <span class="n">Count</span><span class="p">([</span><span class="n">det</span><span class="p">])</span>
+
+<span class="gp">In [14]: </span><span class="n">RE</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;event&#39;</span><span class="p">:</span> <span class="n">print_data</span><span class="p">})</span>
+<span class="go">Measured: {&#39;det&#39;: 1.2664165549094176e-14}</span>
+<span class="gh">Out[14]: </span><span class="go">[&#39;2c453954-ded0-4410-9ad8-d8413d4f2db1&#39;]</span>
+</pre></div>
+</div>
+<p>Each time the RunEngine generates a new Event Doucment (i.e., data point)
+<tt class="docutils literal"><span class="pre">print_data</span></tt> is called.</p>
+<p>There are five kinds of subscriptions matching the four kinds of Documents plus
+an &#8216;all&#8217; subscription that receives all Documents.</p>
+<ul class="simple">
+<li>&#8216;start&#8217;</li>
+<li>&#8216;descriptor&#8217;</li>
+<li>&#8216;event&#8217;</li>
+<li>&#8216;stop&#8217;</li>
+<li>&#8216;all&#8217;</li>
+</ul>
+<p>We can use the &#8216;stop&#8217; subscription to trigger automatic end-of-run activities.
+For example:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [15]: </span><span class="k">def</span> <span class="nf">celebrate</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;The run is finished!&quot;</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+</pre></div>
+</div>
+<p>Let&#8217;s use both <tt class="docutils literal"><span class="pre">print_data</span></tt> and <tt class="docutils literal"><span class="pre">celebrate</span></tt> at once.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [16]: </span><span class="n">RE</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;event&#39;</span><span class="p">:</span> <span class="n">print_data</span><span class="p">,</span> <span class="s">&#39;stop&#39;</span><span class="p">:</span> <span class="n">celebrate</span><span class="p">})</span>
+<span class="go">Measured: {&#39;det&#39;: 1.2664165549094176e-14}</span>
+<span class="go">The run is finished!</span>
+<span class="gh">Out[16]: </span><span class="go">[&#39;757e87d5-d75e-48f8-a72c-80fedb9e0600&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-multiple-document-types">
+<h3>Using multiple document types<a class="headerlink" href="#using-multiple-document-types" title="Permalink to this headline">¶</a></h3>
+<p>Some tasks use only one Document type, but we often need to use more than one.
+For example, LiveTable uses &#8216;start&#8217; kick off the creation of a fresh table,
+it uses &#8216;event&#8217; to see the data, and it uses &#8216;stop&#8217; to draw the bottom border.</p>
+<p>A convenient pattern for this kind of subscription is a class with a method
+for each Document type.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [17]: </span><span class="kn">from</span> <span class="nn">bluesky.callbacks</span> <span class="kn">import</span> <span class="n">CallbackBase</span>
+
+<span class="gp">In [18]: </span><span class="k">class</span> <span class="nc">MyCallback</span><span class="p">(</span><span class="n">CallbackBase</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+<span class="gp">   ....: </span>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;I got a new &#39;start&#39; Document&quot;</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+<span class="gp">   ....: </span>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;I got a new &#39;descriptor&#39; Document&quot;</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+<span class="gp">   ....: </span>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;I got a new &#39;event&#39; Document&quot;</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+<span class="gp">   ....: </span>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;I got a new &#39;stop&#39; Document&quot;</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+</pre></div>
+</div>
+<p>The base class, <tt class="docutils literal"><span class="pre">CallbackBase</span></tt>, takes care of dispatching each Document to
+the corresponding method. If your application does not need all four, you may
+simple omit methods that aren&#8217;t required.</p>
+</div>
+</div>
+<div class="section" id="advanced-subscribing-during-a-scan">
+<h2>Advanced: Subscribing During a Scan<a class="headerlink" href="#advanced-subscribing-during-a-scan" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This section requires some familiarity with Messages, covered in
+<a class="reference internal" href="custom-scans.html"><em>Writing Custom Scans</em></a>. If you haven&#8217;t at least skimmed that section of the
+documents, head over to that page and then revisit this.</p>
+</div>
+<p>Subscriptions can added and removing during the course of a scan.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [19]: </span><span class="k">def</span> <span class="nf">count_with_table</span><span class="p">(</span><span class="n">detectors</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="n">table</span> <span class="o">=</span> <span class="n">LiveTable</span><span class="p">(</span><span class="n">detectors</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">yield</span> <span class="n">Msg</span><span class="p">(</span><span class="s">&#39;subscribe&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;start&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">yield</span> <span class="n">Msg</span><span class="p">(</span><span class="s">&#39;subscribe&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;descriptor&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">yield</span> <span class="n">Msg</span><span class="p">(</span><span class="s">&#39;subscribe&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;event&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">yield</span> <span class="n">Msg</span><span class="p">(</span><span class="s">&#39;subscribe&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;stop&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">yield from</span> <span class="n">Count</span><span class="p">(</span><span class="n">detectors</span><span class="p">)</span>
+<span class="gp">   ....: </span><span class="n">RE</span><span class="p">(</span><span class="n">count_with_table</span><span class="p">(</span><span class="n">dets</span><span class="p">))</span>
+<span class="gp">   ....: </span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|   seq_num  |             time  |          det1  |          det2  |          det3  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="go">|         1  |  15:42:33.391670  |          5.00  |          1.76  |          1.21  |</span>
+<span class="go">+------------+-------------------+----------------+----------------+----------------+</span>
+<span class="gh">Out[19]: </span><span class="go">[&#39;b739c5b4-bd08-4f71-aa4c-53206b0ce60c&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="critical-lossless-subscriptions">
+<h2>Critical Lossless Subscriptions<a class="headerlink" href="#critical-lossless-subscriptions" title="Permalink to this headline">¶</a></h2>
+<p>Because subscriptions are processed during a scan, it&#8217;s possible that they
+can slow down data collection. We mitigate this by making the subscriptions
+<em>lossy</em>. That is, some Documents will be skipped if the subscription
+functions take too long and fall behind. For the purposes of real-time
+feedback, this is usually acceptable. For other purposes, like saving data to
+metadatastore, it is not.</p>
+<p>Critical subscriptions are subscriptions that are executed on every Document
+no matter how long they take to run, potentially slowing down data collection
+but guaranteeing that all tasks are completed but the scan proceeds.</p>
+<p>For example, in the standard configuration, metadatastore insertion functions
+are registered as critical subscriptions.</p>
+<p>If your subscription requires the complete, lossless stream of Documents
+and you are will to accept the possibility of slowing down data
+collection while that stream in processed, you can register your own critical
+subscriptions. Use <tt class="docutils literal"><span class="pre">RE._register_scan_callback(name,</span> <span class="pre">func)</span></tt> where <tt class="docutils literal"><span class="pre">name</span></tt>
+if one of <tt class="docutils literal"><span class="pre">'start'</span></tt>, <tt class="docutils literal"><span class="pre">'descriptor'</span></tt>, <tt class="docutils literal"><span class="pre">'event'</span></tt>, <tt class="docutils literal"><span class="pre">'stop'</span></tt>, and <tt class="docutils literal"><span class="pre">func</span></tt>
+is a callable that accepts a Python dictionary as its argument. Note that
+there is no <tt class="docutils literal"><span class="pre">'all'</span></tt> callback implemented for critical subscriptions.</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="state-machine.html" class="btn btn-neutral float-right" title="Pausing and Resuming" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="scans.html" class="btn btn-neutral" title="Object-Oriented Scan Interface" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Brookhaven National Lab.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

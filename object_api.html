@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Expected API of Hardware Objects &mdash; bluesky 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="bluesky 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="NSLS-II Beamline Configuration Checklist" href="nsls2_checklist.html"/>
+        <link rel="prev" title="Writing Custom Scans" href="custom-scans.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> bluesky
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="simple_api.html">Simple Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#specify-detectors">Specify Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#motor-scans">Motor Scans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#delta-scans">Delta Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#mesh-scan">Mesh Scan</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#scans-tied-to-particular-motors-controllers">Scans Tied to Particular Motors / Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#theta-two-theta">Theta Two Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_api.html#temperature-scans">Temperature Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_api.html#tweak">Tweak</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scans.html">Object-Oriented Scan Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#absolute-scans">Absolute Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#relative-delta-scans">Relative (Delta) Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#adative-scans">Adative Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scans.html#interactive-scans">Interactive Scans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Live Feedback and Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#demo-live-updating-table">Demo: live-updating table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#overview-of-callbacks">Overview of Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#ways-to-invoke-callbacks">Ways to Invoke Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-on-a-per-run-basis">Subscribe on a per-run basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#subscribe-each-time-a-certain-scan-is-used">Subscribe each time a certain scan is used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#advanced-subscribe-for-every-scan">Advanced: Subscribe for every scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#running-callbacks-on-old-scans">Running Callbacks on old scans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#built-in-callbacks">Built-in Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#livetable">LiveTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveplot">LivePlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#liveimage">LiveImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-export">Post-scan Data Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#post-scan-data-validation">Post-scan Data Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#writing-custom-callbacks">Writing Custom Callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#two-simple-custom-callbacks">Two Simple Custom Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="callbacks.html#using-multiple-document-types">Using multiple document types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#advanced-subscribing-during-a-scan">Advanced: Subscribing During a Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html#critical-lossless-subscriptions">Critical Lossless Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="state-machine.html">Pausing and Resuming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#pausing">Pausing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#resuming">Resuming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#what-s-a-checkpoint">What&#8217;s a Checkpoint?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#stopping-or-aborting">Stopping or Aborting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-pausing-a-scan-with-ctrl-c">Example: Pausing a scan with Ctrl+C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-using-a-scan-that-has-a-planned-pause">Example: Using a scan that has a planned pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#suspending">Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#example-suspend-a-scan-if-a-shutter-closes-resume-when-it-opens">Example: Suspend a scan if a shutter closes; resume when it opens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#built-in-pv-monitors-for-conditionally-suspending">Built-in PV Monitors for Conditionally Suspending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#deferred-pause">Deferred Pause</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-pause-or-suspend-programmatically">Advanced: Pause or Suspend Programmatically</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-pause">Request a Pause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state-machine.html#request-a-suspension">Request a Suspension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#advanced-example-requesting-a-pause-from-the-asyncio-event-loop">Advanced Example: Requesting a pause from the asyncio event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#state-machine">State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state-machine.html#panic-an-emergency-stop">&#8220;Panic&#8221;: an Emergency Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Recording Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#persistence-between-scans">Persistence Between Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#required-fields">Required Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom-scans.html">Writing Custom Scans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#simplest-scan">Simplest Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#setting-objects-with-multiple-degrees-of-freedom">Setting Objects with Multiple Degrees of Freedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-responsive">Making Scans Responsive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#sleeping">Sleeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#waiting">Waiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#pauseable-scans">Pauseable Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#creating-documents-saving-the-data">Creating Documents (Saving the Data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#fly-scans">Fly Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#registering-custom-commands">Registering Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#making-scans-reusable">Making Scans Reusable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#generators">Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#reusable-scans">Reusable Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#extra-credit-less-typing-more-magic">Extra Credit: Less Typing, More Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom-scans.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom-scans.html#temperature-sweep">Temperature Sweep</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Expected API of Hardware Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reader-api">Reader API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mover-api">Mover API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flyer-api">Flyer API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nsls2_checklist.html">NSLS-II Beamline Configuration Checklist</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">bluesky</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Expected API of Hardware Objects</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/object_api.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="expected-api-of-hardware-objects">
+<h1>Expected API of Hardware Objects<a class="headerlink" href="#expected-api-of-hardware-objects" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>BlueSky</cite> run engine code is completely independent of the details
+of how the interaction with the hardware works, but the objects passed
+to it must have a minimum api.  There are three rough categories of
+objects, <tt class="docutils literal"><span class="pre">Reader</span></tt> objects which can be asked for a set of values,
+<tt class="docutils literal"><span class="pre">Mover</span></tt> objects which are <tt class="docutils literal"><span class="pre">Reader</span></tt> objects which can be instructed
+to step-wise change their state and <tt class="docutils literal"><span class="pre">Flyer</span></tt> objects which can be
+instructed to start a fly-scan.</p>
+<div class="section" id="reader-api">
+<h2>Reader API<a class="headerlink" href="#reader-api" title="Permalink to this headline">¶</a></h2>
+<p>The required functions and attributes are</p>
+<dl class="class">
+<dt id="Reader">
+<em class="property">class </em><tt class="descname">Reader</tt><a class="headerlink" href="#Reader" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Reader.describe">
+<tt class="descname">describe</tt><big>(</big><big>)</big><a class="headerlink" href="#Reader.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe the data that will be returned by
+<tt class="xref py py-meth docutils literal"><span class="pre">Reader.read()</span></tt>.  The schema must match the <tt class="docutils literal"><span class="pre">DataKey</span></tt>
+schema from metadatastore.</p>
+<p>This is used implicitly by the default event bundling code in
+the run engine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">read(*args, **kwargs):</tt></dt>
+<dd><p>Read the data from the object.  The <tt class="docutils literal"><span class="pre">*args</span></tt> and <tt class="docutils literal"><span class="pre">**kwargs</span></tt>
+can be passed in to the runengine to control any special
+details specific to this object.</p>
+<p>The return value must be a <cite>dict</cite> and must conform to the schema
+defined by the <a class="reference internal" href="#Reader.describe" title="Reader.describe"><tt class="xref py py-meth docutils literal"><span class="pre">Reader.describe()</span></tt></a></p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">read</span></tt> message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Reader.trigger">
+<tt class="descname">trigger</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Reader.trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trigger the reader to begin taking data.  So that the event loop
+can run this should be non-blocking.</p>
+<p>This must return a an object with a <tt class="docutils literal"><span class="pre">callback</span></tt> attribute.  The
+callback must be called when the Reader is ready and must be
+called on assignment if the Reader was ready before the callback
+value was assigned.  This is used to implement block groups.</p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">trigger</span></tt> message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Reader.configure">
+<tt class="descname">configure</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Reader.configure" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Setup detectors which have complicated
+state or may need change the settings of a detector from a &#8216;live&#8217;
+mode to a &#8216;collection&#8217; mode.</p>
+<p>If this method is defined, <cite>deconfigure</cite> must also be defined.</p>
+<p>There is no required return for this function.</p>
+<p>This method is explicitly called in the <tt class="docutils literal"><span class="pre">configure</span></tt> message.</p>
+</div></blockquote>
+<dl class="method">
+<dt id="Reader.deconfigure">
+<tt class="descname">deconfigure</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Reader.deconfigure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove reader from &#8216;collection&#8217; state and return to &#8216;live&#8217;
+state.</p>
+<p>There is no required return.</p>
+<p>This method is called explicitly in the <tt class="docutils literal"><span class="pre">deconfigure</span></tt> message.</p>
+<p>This method is called implicitly on exiting the run engine
+if the <tt class="docutils literal"><span class="pre">configure</span></tt> message has been used and <tt class="docutils literal"><span class="pre">deconfigure</span></tt>
+message has not.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<p>The objects can have any other methods or attributes required for
+their operation or easy of use.  These objects do not need to
+sub-class any particular base class, only have these methods.</p>
+<p>These objects can be used with <tt class="docutils literal"><span class="pre">Read</span></tt>, <tt class="docutils literal"><span class="pre">Trigger</span></tt>, <tt class="docutils literal"><span class="pre">Wait</span></tt>, and
+<tt class="docutils literal"><span class="pre">Describe</span></tt>,  <tt class="docutils literal"><span class="pre">configure</span></tt>, and <tt class="docutils literal"><span class="pre">deconfigure</span></tt>  <cite>Msg</cite> objects.</p>
+</div>
+<div class="section" id="mover-api">
+<h2>Mover API<a class="headerlink" href="#mover-api" title="Permalink to this headline">¶</a></h2>
+<p>The required functions and attributes are</p>
+<dl class="class">
+<dt id="Mover">
+<em class="property">class </em><tt class="descname">Mover</tt><a class="headerlink" href="#Mover" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Mover.describe">
+<tt class="descname">describe</tt><big>(</big><big>)</big><a class="headerlink" href="#Mover.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe the data that will be returned by
+<tt class="xref py py-meth docutils literal"><span class="pre">Mover.read()</span></tt>.  The schema must match the <tt class="docutils literal"><span class="pre">DataKey</span></tt>
+schema from metadatastore.</p>
+<p>This is used implicitly by the default event bundling code in
+the run engine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">read(*args, **kwargs):</tt></dt>
+<dd><p>Read the data from the object.  The <tt class="docutils literal"><span class="pre">*args</span></tt> and <tt class="docutils literal"><span class="pre">**kwargs</span></tt>
+can be passed in to the runengine to control any special
+details specific to this object.</p>
+<p>The return value must be a <cite>dict</cite> and must conform to the schema
+defined by the <a class="reference internal" href="#Mover.describe" title="Mover.describe"><tt class="xref py py-meth docutils literal"><span class="pre">Mover.describe()</span></tt></a></p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">read</span></tt> message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Mover.trigger">
+<tt class="descname">trigger</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Mover.trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trigger the reader to begin taking data.  So that the event loop
+can run this should be non-blocking.</p>
+<p>This must return a an object with a <tt class="docutils literal"><span class="pre">callback</span></tt> attribute.  The
+callback must be called when the Mover is ready and must be
+called on assignment if the Mover was ready before the callback
+value was assigned.  This is used to implement block groups.</p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">trigger</span></tt> message.</p>
+<p>This is a trigger on reading, not starting the motion.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">trigger</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big></dt>
+<dd><p>Trigger the reader to begin taking data.  So that the event loop
+can run this should be non-blocking.</p>
+<p>This must return an object with a <tt class="docutils literal"><span class="pre">callback</span></tt> attribute.  The
+callback must be called when the Mover is ready and must be
+called on assignment if the Mover was ready before the callback
+value was assigned.  This is used to implement block groups.</p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">trigger</span></tt> message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Mover.set">
+<tt class="descname">set</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Mover.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the target position and start moving.</p>
+<p>This must return an object with a <tt class="docutils literal"><span class="pre">callback</span></tt> attribute.  The
+callback must be called when the Mover is at the target position
+and must be called on assignment if the Mover was ready before
+the callback value was assigned.  This is used to implement
+block groups.</p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">set</span></tt> message.</p>
+<p>This method maybe split into two steps (set target, start motion)
+in the future.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The objects can have any other methods or attributes required for
+their operation or easy of use.  These objects do not need to
+sub-class any particular base class, only have these methods.</p>
+<p>These objects can be used with <tt class="docutils literal"><span class="pre">Read</span></tt>, <tt class="docutils literal"><span class="pre">trigger</span></tt>, <tt class="docutils literal"><span class="pre">Set</span></tt>,
+<tt class="docutils literal"><span class="pre">Wait</span></tt>, and <tt class="docutils literal"><span class="pre">Describe</span></tt> <cite>Msg</cite>.</p>
+</div>
+<div class="section" id="flyer-api">
+<h2>Flyer API<a class="headerlink" href="#flyer-api" title="Permalink to this headline">¶</a></h2>
+<p>This is the first pass at implementing a generic interface to fly
+scans.  It only supports the work flow of :</p>
+<ol class="arabic simple">
+<li>start the scan</li>
+<li>check if it is done</li>
+<li>when done collect all of the data</li>
+</ol>
+<p>In the future this might be extended to allow for partial collection
+of data and a way to stop or pause a running fly scan.</p>
+<p>The required functions and attributes are</p>
+<dl class="class">
+<dt id="Flyer">
+<em class="property">class </em><tt class="descname">Flyer</tt><a class="headerlink" href="#Flyer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Flyer.describe">
+<tt class="descname">describe</tt><big>(</big><big>)</big><a class="headerlink" href="#Flyer.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe the data that will be returned by
+<a class="reference internal" href="#Flyer.collect" title="Flyer.collect"><tt class="xref py py-meth docutils literal"><span class="pre">Flyer.collect()</span></tt></a>.  The schema must match the
+<tt class="docutils literal"><span class="pre">DataKey</span></tt> schema from metadatastore.</p>
+<p>This is used implicitly by the default event bundling code in
+the run engine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Flyer.collect">
+<tt class="descname">collect</tt><big>(</big><big>)</big><a class="headerlink" href="#Flyer.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects many events from the <cite>Flyer</cite>.  This function must return an
+iterable that will yield event <cite>dict</cite> that  conform to the schema
+defined by the <a class="reference internal" href="#Flyer.describe" title="Flyer.describe"><tt class="xref py py-meth docutils literal"><span class="pre">Flyer.describe()</span></tt></a>.</p>
+<p>This is an analogue of <cite>Reader.read</cite></p>
+<p>This is explictily used by the <tt class="docutils literal"><span class="pre">Collect</span></tt> message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Flyer.kickoff">
+<tt class="descname">kickoff</tt><big>(</big><big>)</big><a class="headerlink" href="#Flyer.kickoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the flyscan.  So that the event loop can run this should
+be non-blocking.</p>
+<p>This must return an object with a <tt class="docutils literal"><span class="pre">callback</span></tt> attribute.  The
+callback must be called when the flyscan is ready to be collected or
+called on assignment if the flyscan was ready before the callback
+value was assigned.  This is used to implement block groups.</p>
+<p>This is used explicitly via the <tt class="docutils literal"><span class="pre">Kickoff</span></tt> message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The objects can have any other methods or attributes required for their operation
+or ease of use.  These objects do not need to sub-class any particular base class,
+only have these methods.</p>
+<p>These objects can be used with <tt class="docutils literal"><span class="pre">Kickoff</span></tt>, <tt class="docutils literal"><span class="pre">Collect</span></tt>, and <tt class="docutils literal"><span class="pre">Wait</span></tt> <cite>Msg</cite>.</p>
+<p>Eventually this API will be modified to enable incremental collection
+of events.</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nsls2_checklist.html" class="btn btn-neutral float-right" title="NSLS-II Beamline Configuration Checklist" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="custom-scans.html" class="btn btn-neutral" title="Writing Custom Scans" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Brookhaven National Lab.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

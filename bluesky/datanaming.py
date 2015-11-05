@@ -5,8 +5,7 @@ class DataNaming(object):
 
     """Build filenames from fields in databroker header.
 
-    prefix   -- constant string that is prepended to the
-                generated name.
+    prefix   -- fixed path that is prepended to the generated name.
     template -- string template where curly brackets will
                 be exanded according to Python format minilanguage.
                 Template segments denoted with "<>" such as "<segment>"
@@ -25,24 +24,29 @@ class DataNaming(object):
     prefix = ''
     _template = 'scan{scan_id:05d}_{N:03d}<-T{e.data[cs700]:03.1f}>.tiff'
 
-    def __init__(self, prefix=None, template=None):
-        if prefix is not None:
-            self.prefix = prefix
+    def __init__(self, template=None, prefix=None):
         if template is not None:
             self.template = template
+        if prefix is not None:
+            self.prefix = prefix
         return
 
 
     def __call__(self, h):
         """Generate names from fields in databroker header h."""
+        from dataportal import get_events
         tparts = self._split_template(self.template)
         td = dict(h=h, start=h.start, scan_id=h.start.scan_id)
         td['stop'] = getattr(h, 'stop', None)
-        from dataportal import get_events
-        events = get_events(h)
+        events = get_events(h, fill=False)
         rv = [self._makename(tparts, td)
                 for td['N'], td['e'] in enumerate(events)]
         return rv
+
+
+    def __repr__(self):
+        s = "DataNaming(template={!r}, prefix={!r})"
+        return s.format(self.template, self.prefix)
 
 
     @property
@@ -59,6 +63,7 @@ class DataNaming(object):
 
 
     def _makename(self, tparts, td):
+        import os.path
         nmparts = []
         for seg, isopt in tparts:
             try:
@@ -67,7 +72,8 @@ class DataNaming(object):
                 if not isopt:  raise
                 s = ''
             nmparts.append(s)
-        rv = self.prefix + ''.join(nmparts)
+        rv = ''.join(nmparts)
+        rv = os.path.join(self.prefix, rv)
         return rv
 
 

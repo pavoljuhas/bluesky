@@ -11,11 +11,9 @@ import numpy
 
 
 
-class TiffSaver(object):
+class TiffExporter(object):
 
-    _outputdir = '/tmp'
-    _basename = 'scan'
-    _databroker = None
+    transform = None
 
     start_time = datetime.datetime(2015, 3, 19)
     start_time = time.mktime(start_time.timetuple())
@@ -24,12 +22,15 @@ class TiffSaver(object):
     _timetiffs = None
     _dryrun = False
     dtype = numpy.float32
-    default_suffixes = ("{scan_id:05d}", "{index:03d}",
-            "T{event.data[cs700]:03.1f}")
+    default_suffixes = ("T{e.data[cs700]:03.1f}")
 
 
-    def __init__(self):
-        self.suffixes = list(self.default_suffixes)
+    def __init__(self, field, template=None, transform=None):
+        from .datanaming import DataNaming
+        self.field = field
+        self.naming = DataNaming(template=template)
+        if transform is not None:
+            self.transform = transform
         return
 
 

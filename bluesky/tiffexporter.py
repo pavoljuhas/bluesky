@@ -1,279 +1,152 @@
 #!/usr/bin/env python
 
 
-from __future__ import print_function
 import os.path
-import time
 import datetime
-
 import tifffile
-import numpy
-
 
 
 class TiffExporter(object):
 
-    transform = None
-
-    start_time = datetime.datetime(2015, 3, 19)
-    start_time = time.mktime(start_time.timetuple())
-    _mtime_window = 0.05
-    _output_mtime = 0
-    _timetiffs = None
-    _dryrun = False
-    dtype = numpy.float32
-    default_suffixes = ("T{e.data[cs700]:03.1f}")
+    set_mtime = True
+    mtime_window = 0.05
+    default_fetch = 'pe1_image_lightfield'
 
 
-    def __init__(self, field, template=None, transform=None):
+    def __init__(self, fetch=None, template=None, prefix=None):
         from .datanaming import DataNaming
-        self.field = field
-        self.naming = DataNaming(template=template)
-        if transform is not None:
-            self.transform = transform
+        self.fetch = self.default_fetch if fetch is None else fetch
+        self.naming = DataNaming(template, prefix)
         return
 
 
-    def info(self):
-        "Print out TiffSaver configuration."
-        print("TiffSaver configuration:")
-        print("  outputdir =", self.outputdir)
-        print("  basename =", self.basename)
-        print("  suffixes =", self.suffixes)
-        print("  dtype =", self.dtype)
-        print("Last 5 tiff files:")
-        tnms = list(self.timetiffs.values())
-        for tn in tnms[-5:]:
-            print("  " + tn)
-        return
+    def __str__(self):
+        "Human-readable configuration of this object."
+        lines = ["TiffExporter() configuration:",
+                 "  fetch = {self.fetch}",
+                 "  naming = {self.naming}",
+                 "  set_mtime = {self.set_mtime}",
+                 "  mtime_window = {self.mtime_window}",]
+        rv = "\n".join(lines).format(self)
+        return rv
 
 
-    def listtiffs(self, count=None):
-        """List the last count tiff files in the output directory.
-        """
-        print("#", self.outputdir)
-        tt = self.timetiffs
-        tms = list(tt.keys())
-        if count:  tms = tms[-count:]
-        for ti in tms:
-            tmiso = datetime.datetime.fromtimestamp(round(ti)).isoformat()
-            print(tmiso, os.path.basename(tt[ti]), sep='    ')
-        return
+    def __call__(self, h, dryrun=False, overwrite=False):
+        """Export sequentially-numbered TIFF files from databroker header.
 
-
-    def saveScans(self, scanspec,
-            basename=None, overwrite=False, dryrun=False):
-        """Save the specified scans to the outputdir
-
-        scanspec -- can be an integer index, array of indices, a slice
-                    object like numpy.s_[-5:] or a Header document from data
-                    broker.  This looks up entries with corresponding scan_id
-                    in the data broker.
-        basename -- optional basename to be used for exporting these scans.
-                    If not specified, use self.basename.
-        overwrite -- when True, write all specified scans now and remove any
-                    previously exported tiff files, even if written using a
-                    different basename.  When False, skip all scanspec scans
-                    that were already saved.
-        dryrun   -- Do not write anything, just print out what would be done.
-                    Useful for checking the output names and the suffixes
-                    attribute.
+        Parameters
+        ----------
+        h : Header
+            a header from the databroker
+        dryrun : bool
+            When True, display what would be done without taking
+            any action.
+        overwrite : bool
+            Replace existing tiff files when True.
 
         No return value.
         """
-        headers = self.findHeaders(scanspec)
-        stash_basename = self.basename
-        stash_dryrun = self._dryrun
-        if basename is not None:
-            self.basename = basename
-        self._dryrun = dryrun
-        try:
-            for h in headers:
-                self.writeHeader(h, overwrite=overwrite)
-        finally:
-            self.basename = stash_basename
-            self._dryrun = stash_dryrun
-        return
-
-
-    def saveNewScans(self):
-        "Export scan data that were not yet saved to outputdir."
-        lasttime = max([self.start_time] + list(self.timetiffs.keys()))
-        db = self.databroker
-        headers = db.find_events(start_time=lasttime)
-        for header in headers:
-            self.writeHeader(header, overwrite=False)
-        return
-
-
-    def writeHeader(self, header, overwrite=False):
-        from dataportal import get_events
-        events = get_events(header)
-        for n, e in enumerate(events):
-            fname = self._getOutputFilename(header=header, event=e, index=n)
-            self.writeEvent(fname, e, overwrite=overwrite)
-        return
-
-
-    def writeEvent(self, filename, event, overwrite):
-        from uiophyd.brokerutils import fill_event
-        savedfile = self.findSavedEvent(event)
-        if savedfile:
-            msgrm = 'remove existing file {}'.format(savedfile)
-            msgskip = 'skip {}, already saved as {}'.format(filename, savedfile)
-            if overwrite:
-                self._dryordo(msgrm, os.remove, savedfile)
-            else:
-                self._dryordo(msgskip, lambda : None)
-                return
-        dd = event.data
-        nlight = [k for k in dd if k.endswith('image_lightfield')][0]
-        Alight = dd[nlight]
-        if isinstance(Alight, str):
-            fill_event(event)
-            Alight = event.data[nlight]
-        ndark = nlight.replace('lightfield', 'darkfield')
-        Adark = event.data.get(ndark, 0)
-        A = Alight - Adark
-        if 3 == A.ndim:
-            A = A.sum(axis=-1)
-        if 0 == A.size:
-            return
-        if self.dtype is not None:
-            A = A.astype(self.dtype)
-        def _writetiff():
-            tifffile.imsave(filename, A)
-            stinfo = os.stat(filename)
-            os.utime(filename, (stinfo.st_atime, event.time))
-        msg = 'write {} using {}, adjust mtime'.format(
-                filename, A.dtype)
-        self._dryordo(msg, _writetiff)
-        return
-
-
-    def findSavedEvent(self, e):
-        """Return full path to a saved tiff file for the specified scan event.
-
-        e    -- event document object.
-
-        Return string or None if the event has not been saved
-        """
-        import bisect
-        tt = self.timetiffs
-        tms = list(tt.keys())
-        idx = bisect.bisect(tms, e.time)
-        for ti in tms[idx-1:idx+1]:
-            if abs(e.time - ti) < self._mtime_window:
-                return tt[ti]
-        return None
-
-
-    def findHeaders(self, scanspec):
-        """Produce header objects corresponding to scan specification.
-
-        scanspec -- can be an integer index, array of indices,
-                    slice object like numpy.s_[-5:] or string uid.
-        scanspec -- can be an integer index, array of indices, a slice
-                    object like numpy.s_[-5:], a string uid, or a Header
-                    document from data broker.
-
-        Return a list of header objects.
-        """
-        from metadatastore.doc import Document
-        db = self.databroker
-        rv = []
-        if isinstance(scanspec, Document):
-            rv.append(scanspec)
-        elif isinstance(scanspec, int):
-            rv.append(db[scanspec])
-        elif isinstance(scanspec, slice):
-            rv += db[scanspec]
-        elif isinstance(scanspec, str):
-            rv += db(uid=scanspec)
+        from databroker import get_events
+        if dryrun:
+            dryordo = lambda msg, f, *args, **kwargs:  print(msg)
         else:
-            rv += sum(map(self.findHeaders, scanspec), [])
+            dryordo = lambda msg, f, *args, **kwargs:  f(*args, **kwargs)
+        noop = lambda : None
+        msgrm = "remove existing output {}"
+        msgskip = "skip {f} as it is already saved as {o}"
+        outputfiles = self.naming(h)
+        imgs = self.fetch(h)
+        events = get_events(h, fill=False)
+        dircache = {}
+        for f, img, e in zip(outputfiles, imgs, events):
+            existingoutputs = self.outputFileExists(f, dircache=dircache)
+            # skip this image when overwrite is False
+            if not overwrite:
+                for o in existingoutputs:
+                    print(msgskip.format(f=f, o=o))
+                continue
+            assert overwrite
+            for o in existingoutputs:
+                dryordo(msgrm.format(o), os.remove, o)
+            msg = "write image as {}".format(f)
+            dryordo(msg, tifffile.imsave, f, img)
+            if self.set_mtime:
+                stinfo = os.stat(f)
+                isotime = datetime.datetime.fromtimestamp(e.time).isoformat(' ')
+                msg = "adjust mtime of {} to {}".format(f, isotime)
+                dryordo(msg, os.utime, f, (stinfo.st_atime, event.time))
+        return
+
+
+    def findExistingTiffs(self, h):
+        """Return a list of already existing TIFF outputs for databroker
+        header.
+        """
+        from databroker import get_events
+        # avoid repeated calls to os.listdir
+        dircache = {}
+        filenames = self.naming(h)
+        events = get_events(h, fill=False)
+        rv = []
+        for f, e in zip(filenames, events):
+            mtime = e.time if self.set_mtime else None
+            rv.extend(self.outputFileExists(f, mtime, dircache=dircache))
+        return rv
+
+
+    def outputFileExists(self, filename, mtime=None, dircache=None):
+        """Check if there already are any existing tiff files.
+
+        filename -- output filename to be checked
+        mtime    -- file modification time in seconds or None.
+                    When specified, match tiff files in the
+                    filename directory with the same mtime.
+
+        Return a list of full paths of existing tiff files.
+        """
+        fa = os.path.abspath(filename)
+        rv = [fa] if os.path.exists(filename) else []
+        if mtime is None:  return rv
+        outputdir = os.path.abspath(os.path.dirname(filename))
+        ext = os.path.splitext
+        dircache = dircache if dircache is not None else {}
+        if not outputdir in dircache:
+            ofiles = [os.path.join(outputdir, f)
+                    for f in os.listdir(outputdir)]
+            ofiles = [f for f in ofiles
+                    if f.endswith(ext) and os.path.isfile(f)]
+            dircache[outputdir] = ofiles
+        for f in dircache[outputdir]:
+            if f == fa:
+                assert rv[0] == f
+                continue
+            dt = abs(os.path.getmtime(f) - mtime)
+            if dt < self._mtime_window:
+                rv.append(f)
         return rv
 
     # Properties -------------------------------------------------------------
 
     @property
-    def outputdir(self):
-        """Path to the tiff output directory.  When set, relative paths
-        are expanded to a full physical path.
+    def fetch(self):
+        """Function that generates image arrays from a DataBroker headers.
+
+        Must be a callable object or a string.  When set to a string NAME,
+        use get_images(headers, NAME).
         """
-        return self._outputdir
+        return self._fetch
 
-    @outputdir.setter
-    def outputdir(self, value):
-        if not os.path.isdir(value):
-            emsg = "{!r} is not a directory.".format(value)
-            raise ValueError(emsg)
-        self._outputdir = os.path.abspath(value)
-        return
-
-
-    @property
-    def basename(self):
-        """Basename for the tiff files to be written.
-        """
-        return self._basename
-
-    @basename.setter
-    def basename(self, value):
-        if '/' in value or '\\' in value:
-            emsg = "Basename must not contain '/' or '\\'."
-            raise ValueError(emsg)
-        self._basename = value.strip().rstrip('-')
-        return
-
-
-    @property
-    def databroker(self):
-        "Return the active databroker instance."
-        if self._databroker is None:
-            from dataportal.broker import DataBroker
-            self._databroker = DataBroker
-        return self._databroker
-
-
-    @property
-    def timetiffs(self):
-        "Ordered dictionary of mtimes and tiff files in outputdir."
-        from collections import OrderedDict
-        if os.path.getmtime(self.outputdir) == self._output_mtime:
-            return self._timetiffs
-        allfiles = [os.path.join(self.outputdir, f)
-                for f in os.listdir(self.outputdir)]
-        alltiffs = [f for f in allfiles
-                if f.endswith('.tif') and os.path.isfile(f)]
-        tt = sorted((os.path.getmtime(f), f) for f in alltiffs)
-        self._timetiffs = OrderedDict(tt)
-        self._output_mtime = os.path.getmtime(self.outputdir)
-        return self.timetiffs
-
-    # Helpers ----------------------------------------------------------------
-
-    def _getOutputFilename(self, header, event, index):
-        sflst = []
-        scan_id=header.start.scan_id
-        for s in self.suffixes:
-            try:
-                s2 = s.format(header=header, event=event, index=index,
-                        scan_id=scan_id)
-            except (AttributeError, KeyError):
-                continue
-            sflst.append(s2)
-        tailname = '-'.join([self.basename] + sflst) + '.tif'
-        fname = self.outputdir + '/' + tailname
-        return fname
-
-
-    def _dryordo(self, msg, fnc, *args, **kwargs):
-        if self._dryrun:
-            if msg:
-                print('[dryrun]', msg)
+    @fetch.setter
+    def fetch(self, value):
+        if isinstance(value, str):
+            from functools import partial
+            from databroker import get_images
+            self._fetch = partial(get_images, value)
+        elif callable(value):
+            self._fetch = value
         else:
-            fnc(*args, **kwargs)
+            emsg = "fetch must be set to a string or callable object."
+            raise TypeError(emsg)
         return
 
-# class TiffSaver
+# class TiffExporter

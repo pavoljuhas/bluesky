@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 
+"""Export of 2D image data from databroker header in TIFF format.
+"""
+
 import os.path
 import datetime
 
@@ -60,7 +63,7 @@ class TiffExporter(object):
 
     See Also
     --------
-    DataNaming : file name generator from databroker Header.
+    bluesky.datanaming.DataNaming : file name generation from a header.
     """
 
     # class attributes and defaults

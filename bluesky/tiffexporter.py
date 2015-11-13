@@ -62,14 +62,14 @@ class TiffExporter(object):
         n = len(eventtimes)
         selection = _makesetofindices(n, select)
         dircache = {}
-        foundouts = {
+        outputfrom = {
                 f : self.outputFileExists(f,
                     mtime=self.set_mtime and etime, dircache=dircache)
                 for f, etime in zip(outputfiles, eventtimes)}
         imgs = self.fetch(h)
         for i, f, img, etime in zip(range(n), outputfiles, imgs, eventtimes):
             if not i in selection:  continue
-            existingoutputs = foundouts[f]
+            existingoutputs = outputfrom[f]
             # skip this image when overwrite is False
             if not overwrite:
                 for o in existingoutputs:

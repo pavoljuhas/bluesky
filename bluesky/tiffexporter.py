@@ -3,14 +3,71 @@
 
 import os.path
 import datetime
+
 from bluesky.datanaming import DataNaming
 
 
 class TiffExporter(object):
+    """
+    Export detector image data from databroker header in a TIFF format.
 
+    Build a callable object which saves image data from a databroker
+    header.  Output files are built from a template that may include values
+    from the header and its associated events.  TiffExporter can either
+    skip or overwrite already existing files.  The TIFF file modification
+    time is by default set to the timestamp of the exported event.  The
+    timestamp is also used to identify already exported images, possibly
+    under a different naming scheme.
+
+    Attributes
+    ----------
+    default_fetch : str or callable object, class attribute
+        Default value for the `fetch` argument in initialization.
+        Default is 'pe1_image_lightfield'.
+    fetch : callable object
+        Function which generates 2D output arrays from databroker Header.
+        When set to a string NAME, extract arrays using
+        ``databroker.get_images(h, NAME)``.
+    naming : DataNaming instance
+        Callable object which generates output file names from databroker
+        Header.  Use ``naming(h)`` to obtain a list of output names.
+        To adjust naming scheme, modifying the `naming.template` and
+        `naming.prefix` attributes.
+    use_mtime : bool
+        When True (default), write output files with modification time set
+        according to the exported Event.  Also use modification time to
+        identify existing outputs.  When False, write files with current
+        modification time and only check if target paths exist.
+        Default is `True`.
+    mtime_window : float
+        Precision in file modification times when searching for existing
+        output files.   Ignored when `use_mtime` is `False`.
+
+    Parameters
+    ----------
+    fetch : str or callable object, optional
+        Set function that will generate 2D arrays from databroker Header.
+        When string, obtain arrays using ``get_images(h, NAME)``.
+        Use the `default_fetch` value when not specified.
+    template : str, optional
+        Set `naming.template`, a filename template where curly brackets
+        are filled with entries from databroker Header.  See the DataNaming
+        class for more details.
+    prefix : str, optional
+        Set `naming.prefix` a constant output directory that is prefixed
+        to the generated filenames.
+        Default is ''.
+
+    See Also
+    --------
+    DataNaming : file name generator from databroker Header.
+    """
+
+    # class attributes and defaults
+
+    default_fetch = 'pe1_image_lightfield'
     use_mtime = True
     mtime_window = 0.05
-    default_fetch = 'pe1_image_lightfield'
 
 
     def __init__(self, fetch=None, template=None, prefix=None):
@@ -19,14 +76,10 @@ class TiffExporter(object):
         return
 
 
-    def __str__(self):
-        "Human-readable configuration of this object."
-        lines = ["TiffExporter() attributes",
-                 "  fetch = {0.fetch}",
-                 "  naming = {0.naming}",
-                 "  use_mtime = {0.use_mtime}",
-                 "  mtime_window = {0.mtime_window}",]
-        rv = "\n".join(lines).format(self)
+    def __repr__(self):
+        nm = type(self).__name__
+        rv = ("<{0} fetch:{1.fetch} naming:{1.naming} "
+               "use_mtime:{1.use_mtime}>").format(nm, self)
         return rv
 
 
@@ -37,15 +90,19 @@ class TiffExporter(object):
         ----------
         h : Header
             a header from the databroker
-        select : array of integer indices or a slice object like numpy.s_[-3:]
-            Save outputs only from the events at selected indices.
-        dryrun : bool
-            When True, display what would be done without taking
-            any action.
-        overwrite : bool
+        select : integer indices or mask array or slice, optional
+            Export image arrays only at corresponding indices, for example,
+            ``[4, 5]`` or ``numpy.s_[-3:]``.  Export all images by default.
+        dryrun : bool, optional
+            When True, display what would be done without taking any
+            action.
+        overwrite : bool, optional
             Replace existing tiff files when True.
 
-        No return value.
+        Returns
+        -------
+        list
+            Exported output files.
         """
         import tifffile
         from databroker import get_events
@@ -67,6 +124,7 @@ class TiffExporter(object):
                     mtime=self.use_mtime and etime, dircache=dircache)
                 for f, etime in zip(outputfiles, eventtimes)}
         imgs = self.fetch(h)
+        rv = []
         for i, f, img, etime in zip(range(n), outputfiles, imgs, eventtimes):
             if not i in selection:  continue
             existingoutputs = outputfrom[f]
@@ -80,23 +138,33 @@ class TiffExporter(object):
                 dryordo(msgrm.format(o), os.remove, o)
             msg = "write image data to {}".format(f)
             dryordo(msg, tifffile.imsave, f, img)
+            rv.append(f)
             if self.use_mtime:
                 isotime = datetime.datetime.fromtimestamp(etime).isoformat(' ')
                 msg = "adjust image file mtime to {}".format(isotime)
                 dryordo(msg, setmtime, f, etime)
-        return
+        return rv
 
 
-    def findExistingTiffs(self, h, select=None):
-        """Return a list of already existing TIFF outputs for databroker
-        header.
+    def findExistingOutputs(self, h, select=None):
+        """Find any already saved output files given a databroker header.
+
+        When `use_mtime` is active, find files with the same extension
+        and output directory that have the same modification time.
 
         Parameters
         ----------
         h : Header
             a header from the databroker
-        select : array of integer indices or a slice object like numpy.s_[-3:]
-            Find outputs only from the events at specified indices.
+        select : integer indices or mask array or slice, optional
+            Find outputs only for the events at specified indices, for
+            example, ``[0, 1, 2]`` or ``numpy.s_[-3:]``.  Search all
+            events by default.
+
+        Returns
+        -------
+        list
+            Existing absolute output paths or an empty list.
         """
         from databroker import get_events
         # avoid repeated calls to os.listdir
@@ -114,15 +182,27 @@ class TiffExporter(object):
         return rv
 
 
-    def outputFileExists(self, filename, mtime=None, dircache=None):
-        """Check if there already are any existing tiff files.
+    def outputFileExists(self, filename, mtime, dircache=None):
+        """Check for already saved instances of the given output path.
 
-        filename -- output filename to be checked
-        mtime    -- file modification time in seconds or None.
-                    When specified and nonzero, match tiff files in the
-                    filename directory with mtime closer than mtime_window.
+        When `mtime` is non-zero, include files with the same extension
+        and directory that have that modification time.
 
-        Return a list of full paths of existing tiff files.
+        Parameters
+        ----------
+        filename : str
+            output filename to be checked
+        mtime : float or None
+            modification time in epoch seconds to be used for locating
+            outputs with a different naming scheme.  Do not use when
+            zero or None.
+        dircache : dict, optional
+            cached outputs from `os.listdir`.  For internal use only.
+
+        Returns
+        -------
+        list
+            Existing absolute output paths or an empty list.
         """
         fa = os.path.abspath(filename)
         rv = [fa] if os.path.exists(filename) else []
@@ -149,7 +229,7 @@ class TiffExporter(object):
 
     @property
     def fetch(self):
-        """Function that generates image arrays from a DataBroker headers.
+        """Function that generates image arrays from a databroker headers.
 
         Must be a callable object or a string.  When set to a string NAME,
         use get_images(headers, NAME).
@@ -176,5 +256,5 @@ def _makesetofindices(n, select):
     import numpy
     indices = numpy.arange(n)
     if select is not None:
-        indices = indices[select]
+        indices = indices[select].flat
     return set(indices)

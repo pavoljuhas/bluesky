@@ -3,18 +3,17 @@
 
 import os.path
 import datetime
-import tifffile
+from bluesky.datanaming import DataNaming
 
 
 class TiffExporter(object):
 
-    set_mtime = True
+    use_mtime = True
     mtime_window = 0.05
     default_fetch = 'pe1_image_lightfield'
 
 
     def __init__(self, fetch=None, template=None, prefix=None):
-        from .datanaming import DataNaming
         self.fetch = self.default_fetch if fetch is None else fetch
         self.naming = DataNaming(template, prefix)
         return
@@ -23,11 +22,11 @@ class TiffExporter(object):
     def __str__(self):
         "Human-readable configuration of this object."
         lines = ["TiffExporter() attributes",
-                 "  fetch = {self.fetch}",
-                 "  naming = {self.naming}",
-                 "  set_mtime = {self.set_mtime}",
-                 "  mtime_window = {self.mtime_window}",]
-        rv = "\n".join(lines).format(self=self)
+                 "  fetch = {0.fetch}",
+                 "  naming = {0.naming}",
+                 "  use_mtime = {0.use_mtime}",
+                 "  mtime_window = {0.mtime_window}",]
+        rv = "\n".join(lines).format(self)
         return rv
 
 
@@ -48,6 +47,7 @@ class TiffExporter(object):
 
         No return value.
         """
+        import tifffile
         from databroker import get_events
         if dryrun:
             dryordo = lambda msg, f, *args, **kwargs:  print(msg)
@@ -64,7 +64,7 @@ class TiffExporter(object):
         dircache = {}
         outputfrom = {
                 f : self.outputFileExists(f,
-                    mtime=self.set_mtime and etime, dircache=dircache)
+                    mtime=self.use_mtime and etime, dircache=dircache)
                 for f, etime in zip(outputfiles, eventtimes)}
         imgs = self.fetch(h)
         for i, f, img, etime in zip(range(n), outputfiles, imgs, eventtimes):
@@ -80,7 +80,7 @@ class TiffExporter(object):
                 dryordo(msgrm.format(o), os.remove, o)
             msg = "write image data to {}".format(f)
             dryordo(msg, tifffile.imsave, f, img)
-            if self.set_mtime:
+            if self.use_mtime:
                 isotime = datetime.datetime.fromtimestamp(etime).isoformat(' ')
                 msg = "adjust image file mtime to {}".format(isotime)
                 dryordo(msg, setmtime, f, etime)
@@ -103,7 +103,7 @@ class TiffExporter(object):
         dircache = {}
         filenames = self.naming(h)
         eventtimes = [e.time for e in get_events(h, fill=False)]
-        if not self.set_mtime:
+        if not self.use_mtime:
             eventtimes = len(eventtimes) * [None]
         n = len(eventtimes)
         selection = _makesetofindices(n, select)
@@ -165,7 +165,7 @@ class TiffExporter(object):
         elif callable(value):
             self._fetch = value
         else:
-            emsg = "fetch must be set to a string or callable object."
+            emsg = "The fetch attribute must be a string or callable object."
             raise TypeError(emsg)
         return
 

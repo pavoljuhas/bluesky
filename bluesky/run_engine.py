@@ -19,8 +19,7 @@ from super_state_machine.errors import TransitionError
 import numpy as np
 from pkg_resources import resource_filename as rs_fn
 
-from .utils import (CallbackRegistry, SignalHandler, ExtendedList,
-                    normalize_subs_input)
+from .utils import (CallbackRegistry, SignalHandler, normalize_subs_input)
 
 logger = logging.getLogger(__name__)
 
@@ -275,6 +274,7 @@ class RunEngine:
         self._msg_cache = None  # checkpoints can't rewind into a closed run
         self._objs_read.clear()
         self._read_cache.clear()
+        self._uncollected.clear()
         self._describe_cache.clear()
         self._descriptor_uids.clear()
         self._sequence_counters.clear()
@@ -892,6 +892,8 @@ class RunEngine:
     @asyncio.coroutine
     def _collect(self, msg):
         obj = msg.obj
+        self._uncollected.remove(obj)
+
         data_keys_list = obj.describe()
         bulk_data = {}
         for data_keys in data_keys_list:
@@ -928,7 +930,6 @@ class RunEngine:
 
         yield from self.emit(DocumentNames.bulk_events, bulk_data)
         self.debug("Emitted bulk events")
-        self._uncollected.remove(msg.obj)
 
     @asyncio.coroutine
     def _null(self, msg):

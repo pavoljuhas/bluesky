@@ -12,11 +12,12 @@ from ..utils import ensure_uid
 logger = logging.getLogger(__name__)
 
 # back-compat
-try:
-    import matplotlib
-except ImportError:
-    from .mpl_plotting import (LiveScatter, LivePlot, LiveGrid,
-                               LiveFitPlot, LiveRaster, LiveMesh)
+from .mpl_plotting import (LiveScatter, LivePlot, LiveGrid,
+                           LiveFitPlot, LiveRaster, LiveMesh)
+
+# silence pyflakes checker
+assert all((LiveScatter, LivePlot, LiveGrid,
+            LiveFitPlot, LiveRaster, LiveMesh))
 
 
 class CallbackBase:

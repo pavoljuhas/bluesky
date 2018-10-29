@@ -1,7 +1,4 @@
 from collections import ChainMap
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-from cycler import cycler
 import numpy as np
 import warnings
 
@@ -49,6 +46,7 @@ class LivePlot(CallbackBase):
     """
     def __init__(self, y, x=None, *, legend_keys=None, xlim=None, ylim=None,
                  ax=None, fig=None, epoch='run', **kwargs):
+        from matplotlib.pyplot import subplots
         super().__init__()
         if fig is not None:
             if ax is not None:
@@ -60,7 +58,7 @@ class LivePlot(CallbackBase):
                           "provide specific Axes to plot on.")
             ax = fig.gca()
         if ax is None:
-            fig, ax = plt.subplots()
+            fig, ax = subplots()
         self.ax = ax
 
         if legend_keys is None:
@@ -185,8 +183,10 @@ class LiveScatter(CallbackBase):
     """
     def __init__(self, x, y, I, *, xlim=None, ylim=None,
                  clim=None, cmap='viridis', ax=None, **kwargs):
+        from matplotlib.pyplot import subplots
+        from matplotlib.colors import Normalize
         if ax is None:
-            fig, ax = plt.subplots()
+            fig, ax = subplots()
             fig.show()
         ax.cla()
         self.x = x
@@ -199,7 +199,7 @@ class LiveScatter(CallbackBase):
         self.ax = ax
         ax.margins(.1)
         self._xdata, self._ydata, self._Idata = [], [], []
-        self._norm = mcolors.Normalize()
+        self._norm = Normalize()
         self._minx, self._maxx, self._miny, self._maxy = (None,)*4
 
         self.xlim = xlim
@@ -326,8 +326,10 @@ class LiveGrid(CallbackBase):
                  clim=None, cmap='viridis',
                  xlabel='x', ylabel='y', extent=None, aspect='equal',
                  ax=None, x_positive='right', y_positive='up'):
+        from matplotlib.pyplot import subplots
+        from matplotlib.colors import Normalize
         if ax is None:
-            fig, ax = plt.subplots()
+            fig, ax = subplots()
         ax.cla()
         self.I = I
         ax.set_xlabel(xlabel)
@@ -335,7 +337,7 @@ class LiveGrid(CallbackBase):
         ax.set_aspect(aspect)
         self.ax = ax
         self._Idata = np.ones(raster_shape) * np.nan
-        self._norm = mcolors.Normalize()
+        self._norm = Normalize()
         if clim is not None:
             self._norm.vmin, self._norm.vmax = clim
         self.clim = clim
@@ -532,10 +534,12 @@ def plot_peak_stats(peak_stats, ax=None):
     arts : dict
         dictionary of matplotlib Artist objects, for further styling
     """
+    from matplotlib.pyplot import subplots
+    from cycler import cycler
     arts = {}
     ps = peak_stats  # for brevity
     if ax is None:
-        fig, ax = plt.subplots()
+        fig, ax = subplots()
     ax.margins(.1)
     # Plot points, vertical lines, and a legend. Collect Artist objs to return.
     points, = ax.plot(ps.x_data, ps.y_data, 'o')
